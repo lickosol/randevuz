@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -12,27 +14,32 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Верхний блок с фото -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="240dp">
 
             <ImageView
+                android:id="@+id/ivProfilePhoto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/photo"/>
+                android:src="@drawable/photo"
+                tools:ignore="ContentDescription"/>
 
+            <!-- Заголовок сверху -->
             <TextView
                 android:id="@+id/tvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|top"
                 android:layout_marginTop="16dp"
-                android:text="Катя, Филология"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                tools:text="Катя, Филология"/>
 
+            <!-- Информация снизу -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -45,38 +52,24 @@
                     android:id="@+id/tvAgeUniversity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="21 год, БФУ им. Канта"
                     android:textColor="@color/white"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    tools:text="21 год, БФУ им. Канта"/>
             </LinearLayout>
         </FrameLayout>
 
+        <!-- Контейнер для тегов (добавлен ID) -->
         <LinearLayout
+            android:id="@+id/llTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="12dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_tag"
-                android:layout_marginEnd="8dp"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="4dp"
-                android:text="репетиторство"
-                android:textColor="@color/white"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_tag"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="4dp"
-                android:text="дружба"
-                android:textColor="@color/white"/>
+            <!-- Теги будут добавляться динамически -->
         </LinearLayout>
 
+        <!-- Блок с описанием -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -85,6 +78,7 @@
             android:paddingEnd="16dp"
             android:paddingBottom="16dp">
 
+            <!-- Описание -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -100,17 +94,15 @@
                     android:textSize="14sp"/>
 
                 <TextView
+                    android:id="@+id/tvDescriptionValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ищу работодателя и/или подработку в виде
-репетиторства, хорошо знаю языки: английский, турецкий,
-итальянский, собачий. Прайс частных уроков можете
-посмотреть на второй и третьем фото в профиле. Также
-заинтересована в поиске друзей и единомышленников :)"
                     android:textColor="@color/black"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    tools:text="Ищу работодателя и/или подработку..."/>
             </LinearLayout>
 
+            <!-- Место работы -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -126,13 +118,15 @@
                     android:textSize="14sp"/>
 
                 <TextView
+                    android:id="@+id/tvWorkplaceValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Школа №24"
                     android:textColor="@color/black"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    tools:text="Школа №24"/>
             </LinearLayout>
 
+            <!-- Навыки -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -148,14 +142,15 @@
                     android:textSize="14sp"/>
 
                 <TextView
+                    android:id="@+id/tvSkillsValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" Английский язык, Турецкий язык, Итальянский язык,
-Собачий язык, Русский язык, Философия"
                     android:textColor="@color/black"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    tools:text="Английский язык, Турецкий язык..."/>
             </LinearLayout>
 
+            <!-- Внеучебная деятельность -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -170,15 +165,16 @@
                     android:textSize="14sp"/>
 
                 <TextView
+                    android:id="@+id/tvActivitiesValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ЭКО-активизм, Кружок чтения
-стихотворений, Квадробинг"
                     android:textColor="@color/black"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    tools:text="ЭКО-активизм, Кружок чтения..."/>
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Кнопки действий -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -191,7 +187,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="16dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_alert"/>
+                android:src="@drawable/ic_alert"
+                tools:ignore="ContentDescription"/>
 
             <ImageView
                 android:id="@+id/btnMessage"
@@ -199,7 +196,8 @@
                 android:layout_height="32dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_message"/>
+                android:src="@drawable/ic_message"
+                tools:ignore="ContentDescription"/>
 
         </RelativeLayout>
     </LinearLayout>
