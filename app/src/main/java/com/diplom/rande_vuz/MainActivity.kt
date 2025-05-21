@@ -22,28 +22,28 @@ class MainActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        //checkCurrentUser()
+        checkCurrentUser()
 
-        navigateToLogin() //это наоборот потом надо будет убрать
+//        navigateToLogin() //это наоборот потом надо будет убрать
     }
 
-    //private fun checkCurrentUser() {
-        //val currentUser = auth.currentUser
+    private fun checkCurrentUser() {
+        val currentUser = auth.currentUser
 
-        //if (currentUser != null) {
-            //navigateToApp()
-        //} else {
-            //navigateToLogin()
-        //}
-    //}
+        if (currentUser != null) {
+            navigateToApp()
+        } else {
+            navigateToLogin()
+        }
+    }
 
     private fun navigateToLogin() {
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
 
-    //private fun navigateToApp() {
-        //startActivity(Intent(this, AfterRegistrationActivity::class.java))
-        //finish()
-    //}
+    private fun navigateToApp() {
+        startActivity(Intent(this, AfterRegistrationActivity::class.java))
+        finish()
+    }
 }
