@@ -7,8 +7,8 @@
 
     <fragment
         android:id="@+id/navigation_message"
-        android:name="com.diplom.rande_vuz.ui.message.MessageFragment"
-        tools:layout="@layout/fragment_message" />
+        android:name="com.diplom.rande_vuz.ui.message.ChatListFragment"
+        tools:layout="@layout/fragment_chat_list" />
 
     <fragment
         android:id="@+id/navigation_lenta"
