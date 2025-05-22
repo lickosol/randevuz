@@ -158,9 +158,6 @@
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:icon="@drawable/ic_message"
-                android:iconGravity="textStart"
-                android:iconPadding="8dp"
                 android:text="Отправить сообщение"
                 material:cornerRadius="12dp"
                 android:textAllCaps="false" />
