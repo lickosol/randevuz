@@ -1,4 +1,4 @@
-package com.diplom.rande_vuz.ui.message
+package com.diplom.rande_vuz.models
 
 
 sealed class SendStatus {

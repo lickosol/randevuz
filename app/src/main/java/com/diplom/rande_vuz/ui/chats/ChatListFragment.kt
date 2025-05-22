@@ -1,4 +1,4 @@
-package com.diplom.rande_vuz.ui.message
+package com.diplom.rande_vuz.ui.chats
 
 import android.os.Bundle
 import android.util.Log
@@ -9,8 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.diplom.rande_vuz.R
 import com.diplom.rande_vuz.models.Chat
+import com.diplom.rande_vuz.ui.message.MessageFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import androidx.navigation.fragment.findNavController
+import com.diplom.rande_vuz.ui.message.MessageFragmentDirections
 
 class ChatListFragment : Fragment() {
 
@@ -27,7 +30,11 @@ class ChatListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerView = view.findViewById(R.id.chatRecyclerView)
-        adapter = ChatListAdapter()
+        adapter = ChatListAdapter { chat ->
+            val action = MessageFragmentDirections.actionChatListToChat(chat.id)
+            findNavController().navigate(action)
+        }
+
         recyclerView.adapter = adapter
 
         loadUserChats()

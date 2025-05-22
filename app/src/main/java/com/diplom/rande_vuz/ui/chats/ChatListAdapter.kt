@@ -1,4 +1,4 @@
-package com.diplom.rande_vuz.ui.message
+package com.diplom.rande_vuz.ui.chats
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +12,21 @@ import com.diplom.rande_vuz.models.Chat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatListAdapter :
-    ListAdapter<Chat, ChatListAdapter.ChatViewHolder>(ChatDiffCallback()) {
+class ChatListAdapter(
+    private val onChatClick: (Chat) -> Unit
+) : ListAdapter<Chat, ChatListAdapter.ChatViewHolder>(ChatDiffCallback()) {
 
-    class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val usernameTextView: TextView = view.findViewById(R.id.chatUserName)
         val lastMessageTextView: TextView = view.findViewById(R.id.chatLastMessage)
         val messageDateTextView: TextView = view.findViewById(R.id.chatMessageDate)
+
+        init {
+            view.setOnClickListener {
+                val chat = getItem(adapterPosition)
+                onChatClick(chat)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {

@@ -1,51 +1,107 @@
-package com.diplom.rande_vuz.ui.message
-
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.diplom.rande_vuz.models.Message
+import com.diplom.rande_vuz.models.MessageDisplay
+import com.diplom.rande_vuz.models.SendStatus
 import com.google.firebase.auth.FirebaseAuth
-import com.diplom.rande_vuz.ui.message.Message
-import com.google.firebase.firestore.FirebaseFirestore
-import java.util.UUID
+import com.google.firebase.database.*
 
 class MessageViewModel : ViewModel() {
 
-    private val _messages = MutableLiveData<List<Message>>()
-    val messages: LiveData<List<Message>> = _messages
+    private val _messages = MutableLiveData<List<MessageDisplay>>()
+    val messages: LiveData<List<MessageDisplay>> = _messages
 
     private val _sendStatus = MutableLiveData<SendStatus>()
     val sendStatus: LiveData<SendStatus> = _sendStatus
 
-    fun sendMessage(content: String) {
-        val message = Message(
-            id = UUID.randomUUID().toString(),
-            content = content,
-            timestamp = System.currentTimeMillis(),
-            senderId = FirebaseAuth.getInstance().currentUser?.uid ?: "",
-            read = false
-        )
-        FirebaseFirestore.getInstance().collection("messages")
-            .add(message)
-            .addOnSuccessListener {
-                _sendStatus.value = SendStatus.Success
+    private val database = FirebaseDatabase.getInstance()
+    private val userCache = mutableMapOf<String, String>()
+
+    fun loadMessages(chatId: String) {
+        val messagesRef = database.getReference("chats").child(chatId).child("messages")
+
+        messagesRef.orderByChild("timestamp").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val tempList = mutableListOf<MessageDisplay>()
+
+                val allMessages = snapshot.children.mapNotNull { it.getValue(Message::class.java) }
+
+                val dispatchMessages = {
+                    _messages.value = tempList.sortedBy { it.timestamp }
+                }
+
+                var counter = allMessages.size
+                if (counter == 0) {
+                    _messages.value = emptyList()
+                    return
+                }
+
+                allMessages.forEach { msg ->
+                    getUserName(msg.senderId) { name ->
+                        tempList.add(
+                            MessageDisplay(
+                                content = msg.content,
+                                senderName = name,
+                                timestamp = msg.timestamp
+                            )
+                        )
+                        counter--
+                        if (counter == 0) dispatchMessages()
+                    }
+                }
             }
-            .addOnFailureListener {
-                _sendStatus.value = SendStatus.Error(it)
-            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 
-    fun loadMessages() {
-        // загрузка сообщений из Firebase
-        FirebaseFirestore.getInstance().collection("messages")
-            .orderBy("timestamp")
-            .addSnapshotListener { snapshot, exception ->
-                if (exception != null) {
-                    return@addSnapshotListener
+    private fun getUserName(userId: String, callback: (String) -> Unit) {
+        userCache[userId]?.let {
+            callback(it)
+            return
+        }
+
+        database.getReference("users").child(userId).child("name")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val name = snapshot.getValue(String::class.java) ?: "Неизвестный"
+                    userCache[userId] = name
+                    callback(name)
                 }
-                if (snapshot != null && !snapshot.isEmpty) {
-                    val messagesList = snapshot.toObjects(Message::class.java)
-                    _messages.value = messagesList
+
+                override fun onCancelled(error: DatabaseError) {
+                    callback("Неизвестный")
                 }
+            })
+    }
+
+    fun sendMessage(chatId: String, messageText: String) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val timestamp = System.currentTimeMillis()
+
+        val message = Message(
+            content = messageText,
+            senderId = userId,
+            timestamp = timestamp,
+            read = false
+        )
+
+        val chatRef = database.getReference("chats").child(chatId)
+        val newMessageRef = chatRef.child("messages").push()
+        val messageId = newMessageRef.key ?: return
+
+        val updates = hashMapOf<String, Any>(
+            "/messages/$messageId" to message,
+            "/lastMessage" to messageText,
+            "/timestamp" to timestamp
+        )
+
+        chatRef.updateChildren(updates)
+            .addOnSuccessListener { _sendStatus.value = SendStatus.Success }
+            .addOnFailureListener { exception ->
+                _sendStatus.value = SendStatus.Error(exception)
             }
     }
 }
+

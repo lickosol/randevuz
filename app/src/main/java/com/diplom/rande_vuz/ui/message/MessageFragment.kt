@@ -1,23 +1,25 @@
 package com.diplom.rande_vuz.ui.message
 
+import MessageViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
-import androidx.databinding.adapters.ViewBindingAdapter.setOnClick
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.diplom.rande_vuz.databinding.FragmentMessageBinding
-
+import com.diplom.rande_vuz.models.SendStatus
 
 class MessageFragment : Fragment() {
 
     private lateinit var viewModel: MessageViewModel
     private lateinit var binding: FragmentMessageBinding
-    private lateinit var messagesAdapter: MessagesAdapter
+    private lateinit var messageAdapter: MessagesAdapter
+
+    private val args by navArgs<MessageFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,59 +28,49 @@ class MessageFragment : Fragment() {
         binding = FragmentMessageBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(MessageViewModel::class.java)
 
+        val chatId = args.chatId
+
         setupRecyclerView()
         setupObservers()
-        setupSendMessage()
-        /*setOnClick{
-            messagesAdapter.setupFilteredData()
-        }*/
+
+        viewModel.loadMessages(chatId)
+
+        setupSendMessage(chatId)
 
         return binding.root
     }
 
     private fun setupRecyclerView() {
-        messagesAdapter = MessagesAdapter()
+        messageAdapter = MessagesAdapter()
         binding.recyclerViewMessages.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = messagesAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = messageAdapter
         }
     }
 
     private fun setupObservers() {
         viewModel.messages.observe(viewLifecycleOwner) { messages ->
-            messagesAdapter.submitList(messages)
+            messageAdapter.submitList(messages)
+            binding.recyclerViewMessages.scrollToPosition(messages.size - 1)
         }
 
         viewModel.sendStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
-                is SendStatus.Success -> {
-                    binding.editTextMessage.text.clear()
-                }
                 is SendStatus.Error -> {
-                    Toast.makeText(context, "Ошибка отправки сообщения", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Ошибка отправки: ${status.exception.message}", Toast.LENGTH_SHORT).show()
                 }
-                else -> {
-                    //необработанный статус
-                }
+                else -> {}
             }
         }
     }
 
-    private fun setupSendMessage() {
+    private fun setupSendMessage(chatId: String) {
         binding.buttonSend.setOnClickListener {
             val messageText = binding.editTextMessage.text.toString()
             if (messageText.isNotBlank()) {
-                viewModel.sendMessage(messageText)
+                viewModel.sendMessage(chatId, messageText)
+                binding.editTextMessage.text.clear()
             }
         }
-
-        binding.buttonAttach.setOnClickListener {
-            // Логика выбора и отправки фото
-            selectImageFromGallery()
-        }
-    }
-
-    private fun selectImageFromGallery() {
-        // Код для выбора изображения из галереи
     }
 }

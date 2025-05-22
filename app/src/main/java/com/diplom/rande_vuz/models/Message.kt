@@ -1,7 +1,6 @@
-package com.diplom.rande_vuz.ui.message
+package com.diplom.rande_vuz.models
 
 data class Message(
-    val id: String = "",
     val content: String = "",
     val timestamp: Long = 0L,
     val senderId: String = "",

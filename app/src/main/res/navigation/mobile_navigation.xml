@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_message"
-        android:name="com.diplom.rande_vuz.ui.message.ChatListFragment"
+        android:name="com.diplom.rande_vuz.ui.chats.ChatListFragment"
         tools:layout="@layout/fragment_chat_list" />
 
     <fragment
@@ -20,4 +20,23 @@
         android:id="@+id/navigation_profile"
         android:name="com.diplom.rande_vuz.ui.profile.ProfileFragment"
         tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.diplom.rande_vuz.ui.message.MessageFragment"
+        android:label="Чат"
+        tools:layout="@layout/fragment_message">
+
+        <argument
+            android:name="chatId"
+            app:argType="string" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_chatList_to_chat"
+        app:destination="@id/chatFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
 </navigation>

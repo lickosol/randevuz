@@ -7,19 +7,20 @@
     <!-- диалоговое окно -->
 
     <!-- RecyclerView для отображения сообщений -->
+
+    <!-- Нижняя панель для отправки сообщений -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMessages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="8dp"
         android:clipToPadding="false"
+        android:padding="8dp"
         android:scrollbars="vertical" />
 
-    <!-- Нижняя панель для отправки сообщений -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="281dp"
         android:orientation="horizontal"
         android:padding="8dp">
 
@@ -36,12 +37,6 @@
             android:padding="8dp" />
 
         <!-- Кнопка прикрепления файлов -->
-        <ImageButton
-            android:id="@+id/buttonAttach"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="Прикрепить файл"
-            android:background="?attr/selectableItemBackgroundBorderless" />
 
         <!-- Кнопка отправки -->
         <Button
@@ -50,5 +45,12 @@
             android:layout_height="wrap_content"
             android:text="отправить" />
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/buttonAttach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Прикрепить файл" />
 
 </LinearLayout>
