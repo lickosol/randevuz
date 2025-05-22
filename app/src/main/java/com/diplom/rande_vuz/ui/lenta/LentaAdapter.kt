@@ -37,14 +37,29 @@ class LentaAdapter(private var userList: List<UserData>) :
         holder.tvSkills.text = user.skills
         holder.tvExtra.text = user.extracurricular
 
-        if (user.goal.isNotEmpty()) {
-            val goalTextView = TextView(holder.tvGoal.context).apply {
-                text = user.goal
-                setTextAppearance(R.style.TagText)
-                setPadding(8, 4, 8, 4)
+        holder.tvGoal.removeAllViews()
+
+        when (val goal = user.goal) {
+            is String -> {
+                val goalTextView = TextView(holder.tvGoal.context).apply {
+                    text = goal
+                    setTextAppearance(R.style.TagText)
+                    setPadding(8, 4, 8, 4)
+                }
+                holder.tvGoal.addView(goalTextView)
             }
-            holder.tvGoal.removeAllViews()
-            holder.tvGoal.addView(goalTextView)
+            is List<*> -> {
+                goal.forEach { item ->
+                    if (item is String) {
+                        val goalTextView = TextView(holder.tvGoal.context).apply {
+                            text = item
+                            setTextAppearance(R.style.TagText)
+                            setPadding(8, 4, 8, 4)
+                        }
+                        holder.tvGoal.addView(goalTextView)
+                    }
+                }
+            }
         }
     }
 

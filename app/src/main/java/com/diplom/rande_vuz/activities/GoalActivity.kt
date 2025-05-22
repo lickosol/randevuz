@@ -20,7 +20,6 @@ class GoalActivity : AppCompatActivity() {
 
         userData = intent.getSerializableExtra("userData") as? UserData ?: UserData()
 
-        // Инициализация view элементов
         val nextBtn = findViewById<MaterialButton>(R.id.next_btn)
         val goalWork = findViewById<MaterialButton>(R.id.goal_work)
         val goalFriendship = findViewById<MaterialButton>(R.id.goal_friendship)
@@ -42,7 +41,11 @@ class GoalActivity : AppCompatActivity() {
                 val wasSelected = button.tag as? Boolean ?: false
                 toggleButton(button, !wasSelected)
 
-                selectedGoal = if (!wasSelected) button.text.toString() else null
+                if (!wasSelected) {
+                    selectedGoal = button.text.toString()
+                } else {
+                    selectedGoal = null
+                }
             }
         }
 
@@ -61,7 +64,11 @@ class GoalActivity : AppCompatActivity() {
             if (selectedGoal == null) {
                 Toast.makeText(this, "Выберите хотя бы одну цель", Toast.LENGTH_SHORT).show()
             } else {
-                userData.goal = selectedGoal!!
+                userData.goal = if (selectedGoal != null) {
+                    listOf(selectedGoal!!)
+                } else {
+                    userData.goal
+                }
 
                 Intent(this, DescriptionActivity::class.java).apply {
                     putExtra("userData", userData)
@@ -69,5 +76,6 @@ class GoalActivity : AppCompatActivity() {
                 }
             }
         }
+
     }
 }

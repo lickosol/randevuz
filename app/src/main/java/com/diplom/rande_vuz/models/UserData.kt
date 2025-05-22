@@ -10,7 +10,7 @@ data class UserData(
     var skills: String = "",
     var extracurricular: String = "",
     var work: String = "",
-    var goal: String = "",
+    var goal: Any = "",
     var description: String = "",
     var email: String = ""
 ) : Serializable
