@@ -35,7 +35,6 @@ class LentaViewModel : ViewModel() {
                     if (user != null) {
                         userList.add(user)
                     }
-
                     // ПОСЛЕ ОТЛАДКИ включи фильтрацию:
                     // if (uid != null && uid != currentUserId && user != null) {
                     //     userList.add(user)

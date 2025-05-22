@@ -30,7 +30,7 @@ class LentaFragment : Fragment() {
                 name = "Алиса",
                 birthDate = "01.01.2000",
                 vuzName = "МГУ",
-                specialization = "Физика",
+                specialization = "Математика",
                 skills = "Python, C++",
                 extracurricular = "Танцы, волонтерство",
                 work = "Летняя практика в Яндексе",
