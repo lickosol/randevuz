@@ -1,65 +1,52 @@
 package com.diplom.rande_vuz.ui.lenta
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.diplom.rande_vuz.databinding.FragmentLentaBinding
-import  com.diplom.rande_vuz.models.UserData
+import com.google.firebase.auth.FirebaseAuth
 
 class LentaFragment : Fragment() {
 
     private var _binding: FragmentLentaBinding? = null
-
     private val binding get() = _binding!!
 
+    private lateinit var viewModel: LentaViewModel
+    private lateinit var adapter: LentaAdapter
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentLentaBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        // Временные тестовые данные
-        val testUsers = listOf(
-            UserData(
-                name = "Алиса",
-                birthDate = "01.01.2000",
-                vuzName = "МГУ",
-                specialization = "Математика",
-                skills = "Python, C++",
-                extracurricular = "Танцы, волонтерство",
-                work = "Летняя практика в Яндексе",
-                goal = "Хочу найти команду для проекта",
-                description = "Люблю науку и людей",
-                email = "alisa@example.com"
-            ),
-            UserData(
-                name = "Иван",
-                birthDate = "12.03.1999",
-                vuzName = "СПбГУ",
-                specialization = "История",
-                skills = "Письмо, исследование",
-                extracurricular = "Дебаты, квиз",
-                work = "Работаю ассистентом",
-                goal = "Хочу познакомиться",
-                description = "Открыт к новым людям",
-                email = "ivan@example.com"
-            )
-        )
-
-        // Подключаем RecyclerView
-        val recyclerView = binding.rvProfiles
-        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
-        recyclerView.adapter = LentaAdapter(testUsers)
-
-        return root
+        return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Настраиваем RecyclerView
+        adapter = LentaAdapter(emptyList())
+        binding.rvProfiles.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvProfiles.adapter = adapter
+
+        // ViewModel
+        viewModel = ViewModelProvider(this)[LentaViewModel::class.java]
+
+        viewModel.users.observe(viewLifecycleOwner) { users ->
+            Log.d("LentaFragment", "Обновлено пользователей: ${users.size}")
+            adapter.updateUsers(users)
+        }
+
+        // Лог текущего пользователя
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        Log.d("LentaFragment", "Текущий UID: ${currentUser?.uid}")
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

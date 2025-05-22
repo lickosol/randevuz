@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:material="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -11,12 +10,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="0dp">
+        android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="260dp">
+            android:layout_height="240dp">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -24,62 +22,65 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/photo" />
 
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
+                android:layout_gravity="bottom"
+                android:background="#80000000"
                 android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center_horizontal">
-
-                <TextView
-                    android:id="@+id/tvName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Катя, Филология"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                android:padding="16dp">
 
                 <TextView
                     android:id="@+id/tvAgeUniversity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="21 год, БФУ им. Канта"
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:textSize="16sp"/>
             </LinearLayout>
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="12dp"
-                    android:gravity="center">
-
-                    <TextView
-                        style="@style/TagText"
-                        android:text="репетиторство" />
-
-                    <TextView
-                        style="@style/TagText"
-                        android:text="дружба"
-                        android:layout_marginStart="8dp" />
-
-                </LinearLayout>
-            </HorizontalScrollView>
         </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_tag"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/tvSpecialization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_tag"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:paddingBottom="16dp">
 
             <LinearLayout
@@ -89,13 +90,19 @@
                 android:paddingBottom="4dp">
 
                 <TextView
-                    style="@style/DetailLabel"
-                    android:text="Описание:" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Описание: "
+                    android:textColor="@color/primary_dark"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
 
                 <TextView
-                    style="@style/DetailText"
-                    android:layout_marginStart="4dp"
-                    android:text="Ищу работодателя и/или подработку в виде репетиторства, хорошо знаю языки: английский, турецкий, итальянский, собачий. Прайс частных уроков можете посмотреть на второй и третьем фото в профиле. Также заинтересована в поиске друзей и единомышленников :)" />
+                    android:id="@+id/tvDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -105,13 +112,19 @@
                 android:paddingBottom="4dp">
 
                 <TextView
-                    style="@style/DetailLabel"
-                    android:text="Место работы:" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Место работы: "
+                    android:textColor="@color/primary_dark"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
 
                 <TextView
-                    style="@style/DetailText"
-                    android:text="Школа №24" />
-
+                    android:id="@+id/tvWork"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -121,13 +134,19 @@
                 android:paddingBottom="4dp">
 
                 <TextView
-                    style="@style/DetailLabel"
-                    android:text="Навыки:" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Навыки: "
+                    android:textColor="@color/primary_dark"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
 
                 <TextView
-                    style="@style/DetailText"
-                    android:text="Английский язык, Турецкий язык, Итальянский язык, Собачий язык, Русский язык, Философия" />
-
+                    android:id="@+id/tvSkills"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -136,33 +155,44 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/DetailLabel"
-                    android:text="Внеучебная деятельность:" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Внеучебная деятельность: "
+                    android:textColor="@color/primary_dark"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
 
                 <TextView
-                    style="@style/DetailText"
-                    android:text="ЭКО-активизм, Кружок чтения стихотворений, Квадробинг" />
-
+                    android:id="@+id/tvExtra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"/>
             </LinearLayout>
-
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:gravity="center">
+            android:layout_height="48dp"
+            android:paddingEnd="8dp">
 
-            <com.google.android.material.button.MaterialButton
+            <ImageView
+                android:id="@+id/btnReport"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="16dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_alert"/>
+
+            <ImageView
                 android:id="@+id/btnMessage"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Отправить сообщение"
-                material:cornerRadius="12dp"
-                android:textAllCaps="false" />
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_message"/>
 
-        </LinearLayout>
-
+        </RelativeLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
