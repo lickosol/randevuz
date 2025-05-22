@@ -3,6 +3,7 @@ package com.diplom.rande_vuz.ui.lenta
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.diplom.rande_vuz.R
@@ -18,7 +19,7 @@ class LentaAdapter(private var userList: List<UserData>) :
         val tvWork: TextView = itemView.findViewById(R.id.tvWork)
         val tvSkills: TextView = itemView.findViewById(R.id.tvSkills)
         val tvExtra: TextView = itemView.findViewById(R.id.tvExtra)
-        val tvGoal: TextView = itemView.findViewById(R.id.tvGoal)
+        val tvGoal: LinearLayout = itemView.findViewById(R.id.tvGoal)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -35,7 +36,16 @@ class LentaAdapter(private var userList: List<UserData>) :
         holder.tvWork.text = user.work
         holder.tvSkills.text = user.skills
         holder.tvExtra.text = user.extracurricular
-        holder.tvGoal.text = user.goal
+
+        if (user.goal.isNotEmpty()) {
+            val goalTextView = TextView(holder.tvGoal.context).apply {
+                text = user.goal
+                setTextAppearance(R.style.TagText)
+                setPadding(8, 4, 8, 4)
+            }
+            holder.tvGoal.removeAllViews()
+            holder.tvGoal.addView(goalTextView)
+        }
     }
 
     override fun getItemCount(): Int = userList.size
