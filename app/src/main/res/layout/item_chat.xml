@@ -1,32 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_marginVertical="4dp"
+    android:layout_marginHorizontal="8dp"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="8dp">
 
-    <TextView
-        android:id="@+id/chatUserName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="User Name"
-        android:textStyle="bold"
-        android:textSize="16sp"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:padding="12dp">
 
-    <TextView
-        android:id="@+id/chatLastMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Last message..."
-        android:textSize="14sp"
-        android:textColor="#666" />
+        <ImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile_placeholder"
+            android:radius="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="@string/avatar"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:outlineProvider="background" />
 
-    <TextView
-        android:id="@+id/chatMessageDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="21.05.2025 14:37"
-        android:textSize="12sp"
-        android:textColor="#999"
-        android:layout_marginTop="4dp" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/chatUserName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Евгений, Лингвистика"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/blue"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/imgAvatar"
+            app:layout_constraintEnd_toStartOf="@id/chatMessageDate"
+            app:layout_constraintTop_toTopOf="@id/imgAvatar"
+            android:layout_marginStart="12dp" />
+
+        <TextView
+            android:id="@+id/chatMessageDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="21.05.2025"
+            android:textSize="12sp"
+            android:textColor="#999"
+            app:layout_constraintTop_toTopOf="@id/chatUserName"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/chatLastMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Привет, да, слушай, было бы удобнее в телеграмме…"
+            android:textSize="14sp"
+            android:textColor="#666"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintStart_toStartOf="@id/chatUserName"
+            app:layout_constraintEnd_toStartOf="@id/msgStatus"
+            app:layout_constraintTop_toBottomOf="@id/chatUserName"
+            android:layout_marginTop="4dp" />
+
+        <ImageView
+            android:id="@+id/msgStatus"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginBottom="12dp"
+            android:contentDescription="@string/message_status"
+            android:src="@drawable/ic_dot"
+            app:layout_constraintBottom_toBottomOf="@id/chatLastMessage"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
