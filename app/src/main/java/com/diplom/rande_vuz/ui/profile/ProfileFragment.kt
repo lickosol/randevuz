@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.diplom.rande_vuz.databinding.FragmentProfileBinding
+import com.diplom.rande_vuz.activities.LoginActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class ProfileFragment : Fragment() {
 
@@ -25,6 +27,7 @@ class ProfileFragment : Fragment() {
 
         setupObservers()
         setupEditProfile()
+        setupLogout()
 
         return binding.root
     }
@@ -47,6 +50,15 @@ class ProfileFragment : Fragment() {
     private fun setupEditProfile() {
         binding.buttonEditProfile.setOnClickListener {
             val intent = Intent(context, EditProfileActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun setupLogout() {
+        binding.buttonLogout.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(requireContext(), LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
     }
