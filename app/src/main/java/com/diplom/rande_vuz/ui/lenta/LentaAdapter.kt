@@ -20,6 +20,12 @@ class LentaAdapter(private var userList: List<UserData>) :
         val tvSkills: TextView = itemView.findViewById(R.id.tvSkills)
         val tvExtra: TextView = itemView.findViewById(R.id.tvExtra)
         val tvGoal: LinearLayout = itemView.findViewById(R.id.tvGoal)
+
+        // Контейнеры для скрытия
+        val blockDescription: ViewGroup = tvDescription.parent as ViewGroup
+        val blockWork: ViewGroup = tvWork.parent as ViewGroup
+        val blockSkills: ViewGroup = tvSkills.parent as ViewGroup
+        val blockExtra: ViewGroup = tvExtra.parent as ViewGroup
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -30,37 +36,63 @@ class LentaAdapter(private var userList: List<UserData>) :
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = userList[position]
-        holder.tvName.text = "${user.name}, ${user.specialization}"
-        holder.tvAgeUniversity.text = "${user.birthDate}, ${user.vuzName}"
-        holder.tvDescription.text = user.description
-        holder.tvWork.text = user.work
-        holder.tvSkills.text = user.skills
-        holder.tvExtra.text = user.extracurricular
 
-        holder.tvGoal.removeAllViews()
+        // Имя и специальность
+        holder.tvName.text = listOfNotNull(user.name, user.specialization).joinToString(", ")
 
-        when (val goal = user.goal) {
-            is String -> {
-                val goalTextView = TextView(holder.tvGoal.context).apply {
-                    text = goal
-                    setTextAppearance(R.style.TagText)
-                    setPadding(8, 4, 8, 4)
-                }
-                holder.tvGoal.addView(goalTextView)
-            }
-            is List<*> -> {
-                goal.forEach { item ->
-                    if (item is String) {
-                        val goalTextView = TextView(holder.tvGoal.context).apply {
-                            text = item
-                            setTextAppearance(R.style.TagText)
-                            setPadding(8, 4, 8, 4)
-                        }
-                        holder.tvGoal.addView(goalTextView)
-                    }
-                }
-            }
+        // Возраст и вуз
+        holder.tvAgeUniversity.text = listOfNotNull(user.birthDate, user.vuzName).joinToString(", ")
+
+        // Описание
+        if (!user.description.isNullOrBlank()) {
+            holder.tvDescription.text = user.description
+            holder.blockDescription.visibility = View.VISIBLE
+        } else {
+            holder.blockDescription.visibility = View.GONE
         }
+
+        // Работа
+        if (!user.work.isNullOrBlank()) {
+            holder.tvWork.text = user.work
+            holder.blockWork.visibility = View.VISIBLE
+        } else {
+            holder.blockWork.visibility = View.GONE
+        }
+
+        // Навыки
+        if (!user.skills.isNullOrBlank()) {
+            holder.tvSkills.text = user.skills
+            holder.blockSkills.visibility = View.VISIBLE
+        } else {
+            holder.blockSkills.visibility = View.GONE
+        }
+
+        // Внеучебная деятельность
+        if (!user.extracurricular.isNullOrBlank()) {
+            holder.tvExtra.text = user.extracurricular
+            holder.blockExtra.visibility = View.VISIBLE
+        } else {
+            holder.blockExtra.visibility = View.GONE
+        }
+
+        // Цель
+        holder.tvGoal.removeAllViews()
+        val goalList = when (val goal = user.goal) {
+            is String -> if (goal.isNotBlank()) listOf(goal) else emptyList()
+            is List<*> -> goal.filterIsInstance<String>().filter { it.isNotBlank() }
+            else -> emptyList()
+        }
+
+        for (goal in goalList) {
+            val goalTextView = TextView(holder.tvGoal.context).apply {
+                text = goal
+                setTextAppearance(R.style.TagText)
+                setPadding(8, 4, 8, 4)
+            }
+            holder.tvGoal.addView(goalTextView)
+        }
+
+        holder.tvGoal.visibility = if (goalList.isNotEmpty()) View.VISIBLE else View.GONE
     }
 
     override fun getItemCount(): Int = userList.size
