@@ -31,16 +31,12 @@ class LentaViewModel : ViewModel() {
 
                     Log.d("LentaViewModel", "UID: $uid | user: $user")
 
-                    // ВРЕМЕННО: добавляем всех пользователей (включая текущего)
-                    if (user != null) {
+                    // Исключаем текущего пользователя из списка
+                    if (uid != null && uid != currentUserId && user != null) {
                         userList.add(user)
                     }
-                    // ПОСЛЕ ОТЛАДКИ включи фильтрацию:
-                    // if (uid != null && uid != currentUserId && user != null) {
-                    //     userList.add(user)
-                    // }
                 }
-                Log.d("LentaViewModel", "Total users loaded: ${userList.size}")
+                Log.d("LentaViewModel", "Total users loaded (excluding self): ${userList.size}")
                 _users.value = userList
             }
 
