@@ -4,64 +4,81 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.diplom.rande_vuz.databinding.ActivityEditProfileBinding
+import com.diplom.rande_vuz.models.UserData
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.database.FirebaseDatabase
 
 class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditProfileBinding
+    private val dbRef by lazy { FirebaseDatabase.getInstance().getReference("users") }
+    private val uid by lazy { FirebaseAuth.getInstance().currentUser?.uid }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        loadCurrentProfile()
-        setupSaveButton()
+        if (uid == null) {
+            Toast.makeText(this, "Пользователь не авторизован", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        loadProfile()
+        binding.buttonSave.setOnClickListener { saveProfile() }
     }
 
-    private fun loadCurrentProfile() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        FirebaseFirestore.getInstance().collection("users")
-            .document(userId)
-            .get()
-            .addOnSuccessListener { document ->
-                val profile = document.toObject(UserProfile::class.java)
-                profile?.let {
+    private fun loadProfile() {
+        dbRef.child(uid!!).get()
+            .addOnSuccessListener { snap ->
+                val user = snap.getValue(UserData::class.java)
+                user?.let {
                     binding.editTextName.setText(it.name)
-                    binding.editTextAge.setText(it.age.toString())
-                    binding.editTextUniversity.setText(it.university)
-                    binding.editTextCourse.setText(it.course)
+                    binding.editTextBirthDate.setText(it.birthDate)
+                    binding.editTextSpecialization.setText(it.specialization)
+                    binding.editTextVuzName.setText(it.vuzName)
+                    binding.editTextEmail.setText(it.email)
+                    binding.editTextWork.setText(it.work)
+                    binding.editTextExtracurricular.setText(it.extracurricular)
+                    binding.editTextDescription.setText(it.description)
                     binding.editTextSkills.setText(it.skills)
-                    binding.editTextAbout.setText(it.about)
+                    val goalsString = when (val g = it.goal) {
+                        is String -> g
+                        is List<*> -> (g as List<String>).joinToString(", ")
+                        else -> ""
+                    }
+                    binding.editTextGoals.setText(goalsString)
                 }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Не удалось загрузить профиль", Toast.LENGTH_SHORT).show()
             }
     }
 
-    private fun setupSaveButton() {
-        binding.buttonSave.setOnClickListener {
-            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@setOnClickListener
+    private fun saveProfile() {
+        val updated = UserData(
+            name = binding.editTextName.text.toString().trim(),
+            birthDate = binding.editTextBirthDate.text.toString().trim(),
+            specialization = binding.editTextSpecialization.text.toString().trim(),
+            vuzName = binding.editTextVuzName.text.toString().trim(),
+            email = binding.editTextEmail.text.toString().trim(),
+            work = binding.editTextWork.text.toString().trim(),
+            extracurricular = binding.editTextExtracurricular.text.toString().trim(),
+            description = binding.editTextDescription.text.toString().trim(),
+            skills = binding.editTextSkills.text.toString().trim(),
+            goal = binding.editTextGoals.text.toString().split(",")
+                .map(String::trim)
+                .filter(String::isNotBlank)
+        )
 
-            val updatedProfile = UserProfile(
-                name = binding.editTextName.text.toString(),
-                age = binding.editTextAge.text.toString().toIntOrNull() ?: 0,
-                university = binding.editTextUniversity.text.toString(),
-                course = binding.editTextCourse.text.toString(),
-                skills = binding.editTextSkills.text.toString(),
-                about = binding.editTextAbout.text.toString(),
-                photoUrl = null // добавить логику загрузки фото
-            )
-
-            FirebaseFirestore.getInstance().collection("users")
-                .document(userId)
-                .set(updatedProfile)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Профиль обновлен!", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Не удалось обновить профиль", Toast.LENGTH_SHORT).show()
-                }
-        }
+        dbRef.child(uid!!).setValue(updated)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Профиль сохранён", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Ошибка при сохранении профиля", Toast.LENGTH_SHORT).show()
+            }
     }
 }
