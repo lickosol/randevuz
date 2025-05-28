@@ -16,5 +16,6 @@ data class UserData(
     var work: String = "",
     var goal: Any = "",
     var description: String = "",
-    var email: String = ""
+    var email: String = "",
+    var profilePhotoPath: String = ""
 ) : Serializable
