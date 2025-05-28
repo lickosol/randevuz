@@ -6,18 +6,18 @@
     <string name="title_dashboard">Лента</string>
     <string name="title_notifications">Профиль</string>
 
-        <string name="save">Сохранить</string>
-        <string name="profile_image">Фото профиля</string>
+    <string name="save">Сохранить</string>
+    <string name="profile_image">Фото профиля</string>
 
-        <string name="name">Имя</string>
-        <string name="age">Возраст</string>
-        <string name="university">Место учебы</string>
-        <string name="course">Курс</string>
-        <string name="skills">Навыки</string>
-        <string name="about">О себе</string>
+    <string name="name">Имя</string>
+    <string name="age">Возраст</string>
+    <string name="university">Место учебы</string>
+    <string name="course">Курс</string>
+    <string name="skills">Навыки</string>
+    <string name="about">О себе</string>
 
-        <string name="message_status">Статус</string>
-        <string name="avatar">Аватар</string>
+    <string name="message_status">Статус</string>
+    <string name="avatar">Аватар</string>
 
-        <string name="select_date">Выбери дату</string>
+    <string name="select_date">Выбери дату</string>
 </resources>
