@@ -21,12 +21,13 @@ class MessageViewModel : ViewModel() {
 
     fun loadMessages(chatId: String) {
         val messagesRef = database.getReference("chats").child(chatId).child("messages")
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
         messagesRef.orderByChild("timestamp").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val tempList = mutableListOf<MessageDisplay>()
 
-                val allMessages = snapshot.children.mapNotNull { it.getValue(Message::class.java) }
+                val allMessages = snapshot.children.mapNotNull { it.getValue(Message::class.java) to it.key }
 
                 val dispatchMessages = {
                     _messages.value = tempList.sortedBy { it.timestamp }
@@ -38,17 +39,28 @@ class MessageViewModel : ViewModel() {
                     return
                 }
 
-                allMessages.forEach { msg ->
-                    getUserName(msg.senderId) { name ->
-                        tempList.add(
-                            MessageDisplay(
-                                content = msg.content,
-                                senderName = name,
-                                timestamp = msg.timestamp
+                allMessages.forEach { (msg, key) ->
+                    // Отмечаем как прочитанное, если это чужое сообщение и оно ещё не прочитано
+                    if (msg != null) {
+                        if (!msg.read && msg.senderId != currentUserId && key != null) {
+                            messagesRef.child(key).child("read").setValue(true)
+                        }
+                    }
+
+                    if (msg != null) {
+                        getUserName(msg.senderId) { name ->
+                            tempList.add(
+                                MessageDisplay(
+                                    content = msg.content,
+                                    senderName = name,
+                                    timestamp = msg.timestamp,
+                                    read = msg.read || msg.senderId != currentUserId, // сразу считаем как прочитанное
+                                    senderId = msg.senderId
+                                )
                             )
-                        )
-                        counter--
-                        if (counter == 0) dispatchMessages()
+                            counter--
+                            if (counter == 0) dispatchMessages()
+                        }
                     }
                 }
             }
@@ -56,6 +68,7 @@ class MessageViewModel : ViewModel() {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+
 
     fun checkExistingChat(otherUserId: String, callback: (String?) -> Unit) {
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: run {
