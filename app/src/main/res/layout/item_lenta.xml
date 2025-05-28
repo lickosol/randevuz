@@ -72,75 +72,56 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingTop="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="4dp">
+                android:paddingBottom="4dp"
+                android:textSize="14sp"
+                android:textColor="@color/primary_dark"
+                />
 
-                <TextView
-                    style="@style/DetailLabel"
-                    android:text="Описание:" />
-
-                <TextView
-                    style="@style/DetailText"
-                    android:layout_marginStart="4dp"
-                    android:id="@+id/tvDescription" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvWork"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="4dp">
+                android:paddingBottom="4dp"
+                android:textSize="14sp"
+                android:textColor="@color/primary_dark"
+                />
 
-                <TextView
-                    style="@style/DetailLabel"
-                    android:text="Место работы:" />
 
-                <TextView
-                    style="@style/DetailText"
-                    android:id="@+id/tvWork"/>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvSkills"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="4dp">
+                android:paddingBottom="4dp"
+                android:textSize="14sp"
+                android:textColor="@color/primary_dark"
+                />
 
-                <TextView
-                    style="@style/DetailLabel"
-                    android:text="Навыки:" />
-
-                <TextView
-                    style="@style/DetailText"
-                    android:id="@+id/tvSkills"/>
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvExtra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/DetailLabel"
-                    android:text="Внеучебная деятельность:" />
-
-                <TextView
-                    android:id="@+id/tvExtra"
-                    style="@style/DetailText"/>
-            </LinearLayout>
+                android:paddingBottom="4dp"
+                android:textSize="14sp"
+                android:textColor="@color/primary_dark"
+                />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="10dp"
             android:gravity="center">
 
             <com.google.android.material.button.MaterialButton

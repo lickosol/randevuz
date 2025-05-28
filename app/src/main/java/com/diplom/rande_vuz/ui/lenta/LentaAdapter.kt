@@ -11,10 +11,13 @@ import com.diplom.rande_vuz.models.UserData
 import com.google.android.material.button.MaterialButton
 import java.util.*
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
-import android.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import android.content.res.ColorStateList
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import androidx.core.text.buildSpannedString
+import androidx.core.text.color
+import androidx.core.text.bold
 
 class LentaAdapter(
     private var userList: List<UserData>,
@@ -53,33 +56,58 @@ class LentaAdapter(
         val age = calculateAge(user.birthDate)
         holder.tvAgeUniversity.text = listOfNotNull(age, user.vuzName).joinToString(", ")
 
-        // Описание
+
         if (!user.description.isNullOrBlank()) {
-            holder.tvDescription.text = user.description
+            val spannable = buildSpannedString {
+                color(ContextCompat.getColor(holder.itemView.context, R.color.blue)) {
+                    bold { append("Описание: ") }
+                }
+                append(user.description)
+            }
+
+            holder.tvDescription.text = spannable
             holder.blockDescription.visibility = View.VISIBLE
         } else {
-            holder.blockDescription.visibility = View.GONE
+            holder.tvDescription.visibility = View.GONE
         }
 
         // Работа
         if (!user.work.isNullOrBlank()) {
-            holder.tvWork.text = user.work
+            val spannable = buildSpannedString {
+                color(ContextCompat.getColor(holder.itemView.context, R.color.blue)) {
+                    bold { append("Место работы: ") }
+                }
+                append(user.work)
+            }
+            holder.tvWork.text = spannable
             holder.blockWork.visibility = View.VISIBLE
         } else {
-            holder.blockWork.visibility = View.GONE
+            holder.tvWork.visibility = View.GONE
         }
 
         // Навыки
         if (!user.skills.isNullOrBlank()) {
-            holder.tvSkills.text = user.skills
+            val spannable = buildSpannedString {
+                color(ContextCompat.getColor(holder.itemView.context, R.color.blue)) {
+                    bold { append("Навыки: ") }
+                }
+                append(user.skills)
+            }
+            holder.tvSkills.text = spannable
             holder.blockSkills.visibility = View.VISIBLE
         } else {
-            holder.blockSkills.visibility = View.GONE
+            holder.tvSkills.visibility = View.GONE
         }
 
         // Внеучебная деятельность
         if (!user.extracurricular.isNullOrBlank()) {
-            holder.tvExtra.text = user.extracurricular
+            val spannable = buildSpannedString {
+                color(ContextCompat.getColor(holder.itemView.context, R.color.blue)) {
+                    bold { append("Внеучебная деятельность: ") }
+                }
+                append(user.extracurricular)
+            }
+            holder.tvExtra.text = spannable
             holder.blockExtra.visibility = View.VISIBLE
         } else {
             holder.blockExtra.visibility = View.GONE
