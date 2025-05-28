@@ -9,47 +9,87 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.diplom.rande_vuz.databinding.FragmentProfileBinding
 import com.diplom.rande_vuz.activities.LoginActivity
+import com.diplom.rande_vuz.databinding.FragmentProfileBinding
+import com.diplom.rande_vuz.ui.profile.EditProfileActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.diplom.rande_vuz.R
 
 class ProfileFragment : Fragment() {
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var viewModel: ProfileViewModel
-    private lateinit var binding: FragmentProfileBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-
-        setupObservers()
-        setupEditProfile()
-        setupLogout()
-
         return binding.root
     }
 
-    private fun setupObservers() {
-        viewModel.userProfile.observe(viewLifecycleOwner) { profile ->
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeProfile()
+        setupEditProfile()
+        setupLogout()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadUser()
+    }
+
+    private fun observeProfile() {
+        viewModel.user.observe(viewLifecycleOwner) { profile ->
             profile?.let {
                 binding.textViewName.text = it.name
-                binding.textViewAge.text = it.age.toString()
-                binding.textViewUniversity.text = it.university
-                binding.textViewCourse.text = it.course
-                //binding.textViewSkills.text = it.skills
-                binding.textViewAbout.text = it.about
-                Glide.with(this).load(it.photoUrl).into(binding.imageViewProfile)
+                binding.textViewBirthDate.text = it.birthDate
+                binding.textViewSpecialization.text = it.specialization
+                binding.textViewVuzName.text = it.vuzName
+                binding.textViewEmail.text = it.email
+                binding.textViewWork.text = it.work
+                binding.textViewExtracurricular.text = it.extracurricular
+                binding.textViewDescription.text = it.description
+
+                // Skills
+                binding.skillsContainer.removeAllViews()
+                it.skills.split(",").map(String::trim)
+                    .filter { s -> s.isNotBlank() }
+                    .forEach { skill ->
+                        val tv = TextView(requireContext()).apply {
+                            text = skill
+                            setTextAppearance(R.style.TagText)
+                            setPadding(12, 6, 12, 6)
+                        }
+                        binding.skillsContainer.addView(tv)
+                    }
+
+                // Goals
+                binding.goalsContainer.removeAllViews()
+                val goals = when (val g = it.goal) {
+                    is String -> g.split(",").map(String::trim).filter(String::isNotBlank)
+                    is List<*> -> g.filterIsInstance<String>()
+                    else -> emptyList()
+                }
+                goals.forEach { goalText ->
+                    val tv = TextView(requireContext()).apply {
+                        text = goalText
+                        setTextAppearance(R.style.TagText)
+                        setPadding(8, 4, 8, 4)
+                    }
+                    binding.goalsContainer.addView(tv)
+                }
             }
         }
     }
 
-
     private fun setupEditProfile() {
         binding.buttonEditProfile.setOnClickListener {
-            val intent = Intent(context, EditProfileActivity::class.java)
+            val intent = Intent(requireContext(), EditProfileActivity::class.java)
             startActivity(intent)
         }
     }
@@ -61,5 +101,10 @@ class ProfileFragment : Fragment() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -88,6 +88,14 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity
+            android:name=".ui.profile.EditProfileActivity"
+            android:label="Редактировать профиль"
+            android:parentActivityName=".ui.profile.ProfileFragment" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.profile.ProfileFragment" />
+        </activity>
     </application>
 
 </manifest>
