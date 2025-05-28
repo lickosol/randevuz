@@ -55,24 +55,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom">
 
-                <LinearLayout
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/tvGoal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:padding="12dp"
-                    android:id="@+id/tvGoal"
-                    android:gravity="center">
-
-                    <TextView
-                        style="@style/TagText"
-                        android:text="репетиторство" />
-
-                    <TextView
-                        style="@style/TagText"
-                        android:text="дружба"
-                        android:layout_marginStart="8dp" />
-
-                </LinearLayout>
+                    app:singleLine="false"
+                    app:chipSpacing="12dp"
+                    app:chipSpacingHorizontal="12dp"
+                    app:chipSpacingVertical="8dp"
+                    android:gravity="center" />
             </HorizontalScrollView>
         </FrameLayout>
 
