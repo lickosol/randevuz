@@ -56,6 +56,17 @@ class PasswordRegistrationActivity : AppCompatActivity() {
         }
 
         val userMap = hashMapOf<String, Any>(
+            "uid" to userId,
+            "name" to (userData.name ?: ""),
+            "birthDate" to (userData.birthDate ?: ""),
+            "vuz_name" to (userData.vuzName ?: ""),
+            "specialization" to (userData.specialization ?: ""),
+            "skills" to (userData.skills ?: ""),
+            "extracurricular" to (userData.extracurricular ?: ""),
+            "work" to (userData.work ?: ""),
+            "goal" to (userData.goal ?: emptyList<String>()),
+            "description" to (userData.description ?: ""),
+            "email" to (userData.email ?: "")
         )
 
         database.reference.child("users").child(userId).setValue(userMap)
