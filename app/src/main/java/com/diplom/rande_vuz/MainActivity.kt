@@ -9,8 +9,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-//все что в этом коде закомменчено отвечает за то чтобы пользователя сразу кидало в ленту если он уже входил
-//я пока что заккоментила чтоб было удобно переделывать разметку реги но когда 100% рега будет готова надо вернуть
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,7 +22,6 @@ class MainActivity : AppCompatActivity() {
 
         checkCurrentUser()
 
-//        navigateToLogin() //это наоборот потом надо будет убрать
     }
 
     private fun checkCurrentUser() {

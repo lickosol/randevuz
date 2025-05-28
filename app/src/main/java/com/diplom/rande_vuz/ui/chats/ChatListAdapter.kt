@@ -40,11 +40,25 @@ class ChatListAdapter(
         holder.usernameTextView.text = chat.chatName
         holder.lastMessageTextView.text = chat.lastMessage
 
-        val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-        val dateText = sdf.format(Date(chat.timestamp))
-
-        holder.messageDateTextView.text = dateText
+        holder.messageDateTextView.text = formatTimestamp(chat.timestamp)
     }
+
+
+    private fun formatTimestamp(timestamp: Long): String {
+        val date = Date(timestamp)
+        val now = Calendar.getInstance()
+        val msgCal = Calendar.getInstance().apply { time = date }
+
+        return if (
+            now.get(Calendar.YEAR) == msgCal.get(Calendar.YEAR) &&
+            now.get(Calendar.DAY_OF_YEAR) == msgCal.get(Calendar.DAY_OF_YEAR)
+        ) {
+            SimpleDateFormat("HH:mm", Locale.getDefault()).format(date)
+        } else {
+            SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(date)
+        }
+    }
+
 }
 
 class ChatDiffCallback : DiffUtil.ItemCallback<Chat>() {

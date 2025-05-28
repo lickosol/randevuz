@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.diplom.rande_vuz.R
 import com.diplom.rande_vuz.models.Chat
-import com.diplom.rande_vuz.ui.message.MessageFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import androidx.navigation.fragment.findNavController
@@ -31,7 +30,13 @@ class ChatListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerView = view.findViewById(R.id.chatRecyclerView)
         adapter = ChatListAdapter { chat ->
-            val action = MessageFragmentDirections.actionChatListToChat(chat.id)
+            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return@ChatListAdapter
+            val otherUserId = chat.userIds.firstOrNull { it != currentUserId } ?: currentUserId
+
+            val action = MessageFragmentDirections.actionChatListToChat(
+                chatId = chat.id,
+                otherUserId = otherUserId // Определяем динамически
+            )
             findNavController().navigate(action)
         }
 
@@ -53,7 +58,6 @@ class ChatListFragment : Fragment() {
                     userIds.contains(userId)
                 }
 
-
                 if (chatsToLoad.isEmpty()) {
                     adapter.submitList(emptyList())
                     return
@@ -66,6 +70,9 @@ class ChatListFragment : Fragment() {
                     val lastMessage = chatSnapshot.child("lastMessage").getValue(String::class.java) ?: ""
                     val timestamp = chatSnapshot.child("timestamp").getValue(Long::class.java) ?: 0L
                     val userIds = chatSnapshot.child("userIds").children.mapNotNull { it.getValue(String::class.java) }
+
+                    // Находим otherUserId динамически
+                    val otherUserId = userIds.firstOrNull { it != userId } ?: userId
 
                     val userNames = mutableMapOf<String, String>()
                     val usersRef = FirebaseDatabase.getInstance().getReference("users")
@@ -80,7 +87,6 @@ class ChatListFragment : Fragment() {
 
                                 loadedUserNames++
                                 if (loadedUserNames == userIds.size) {
-                                    val otherUserId = userIds.firstOrNull { it != userId } ?: userId
                                     val chatName = userNames[otherUserId] ?: "Unknown"
 
                                     val chat = Chat(
@@ -104,7 +110,6 @@ class ChatListFragment : Fragment() {
 
                                 loadedUserNames++
                                 if (loadedUserNames == userIds.size) {
-                                    val otherUserId = userIds.firstOrNull { it != userId } ?: userId
                                     val chatName = userNames[otherUserId] ?: "Unknown"
 
                                     val chat = Chat(

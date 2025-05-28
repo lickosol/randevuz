@@ -21,22 +21,41 @@ class MessageFragment : Fragment() {
 
     private val args by navArgs<MessageFragmentArgs>()
 
+    private var actualChatId: String? = null
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMessageBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this).get(MessageViewModel::class.java)
+        viewModel = ViewModelProvider(this)[MessageViewModel::class.java]
 
+        val args by navArgs<MessageFragmentArgs>()
         val chatId = args.chatId
+        val otherUserId = args.otherUserId
+
+        actualChatId = chatId
 
         setupRecyclerView()
         setupObservers()
 
-        viewModel.loadMessages(chatId)
+        if (chatId != null) {
+            // Загружаем существующий чат
+            viewModel.loadMessages(chatId)
+        } else {
+            // Проверяем существующий чат
+            viewModel.checkExistingChat(otherUserId) { existingChatId ->
+                if (existingChatId != null) {
+                    // Чат существует - загружаем
+                    actualChatId = existingChatId
+                    viewModel.loadMessages(existingChatId)
+                }
+                // Если чата нет - он создастся при отправке первого сообщения
+            }
+        }
 
-        setupSendMessage(chatId)
-
+        setupSendMessage(otherUserId)
         return binding.root
     }
 
@@ -51,26 +70,47 @@ class MessageFragment : Fragment() {
     private fun setupObservers() {
         viewModel.messages.observe(viewLifecycleOwner) { messages ->
             messageAdapter.submitList(messages)
-            binding.recyclerViewMessages.scrollToPosition(messages.size - 1)
+            if (messages.isNotEmpty()) {
+                binding.recyclerViewMessages.scrollToPosition(messages.size - 1)
+            }
         }
 
         viewModel.sendStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
                 is SendStatus.Error -> {
-                    Toast.makeText(requireContext(), "Ошибка отправки: ${status.exception.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Ошибка отправки: ${status.exception.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-                else -> {}
+                else -> {} // Успех обрабатывается молча
             }
         }
     }
 
-    private fun setupSendMessage(chatId: String) {
+    private fun setupSendMessage(otherUserId: String) {
         binding.buttonSend.setOnClickListener {
-            val messageText = binding.editTextMessage.text.toString()
-            if (messageText.isNotBlank()) {
-                viewModel.sendMessage(chatId, messageText)
-                binding.editTextMessage.text.clear()
+            val messageText = binding.editTextMessage.text.toString().trim()
+
+            if (messageText.isBlank()) return@setOnClickListener
+
+            if (actualChatId != null) {
+                // Отправка в существующий чат
+                viewModel.sendMessage(actualChatId!!, messageText)
+            } else {
+                // Создание нового чата с проверкой
+                if (otherUserId.isBlank()) {
+                    Toast.makeText(context, "Ошибка: не указан собеседник", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                viewModel.createChatWithMessage(otherUserId, messageText) { newChatId ->
+                    actualChatId = newChatId
+                    viewModel.loadMessages(newChatId)
+                }
             }
+            binding.editTextMessage.text.clear()
         }
     }
 }

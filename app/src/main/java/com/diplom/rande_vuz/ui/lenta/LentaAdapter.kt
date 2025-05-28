@@ -8,10 +8,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.diplom.rande_vuz.R
 import com.diplom.rande_vuz.models.UserData
+import com.google.android.material.button.MaterialButton
 import java.util.*
 
-class LentaAdapter(private var userList: List<UserData>) :
-    RecyclerView.Adapter<LentaAdapter.UserViewHolder>() {
+class LentaAdapter(
+    private var userList: List<UserData>,
+    private val onUserClick: (UserData) -> Unit
+) : RecyclerView.Adapter<LentaAdapter.UserViewHolder>() {
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvName: TextView = itemView.findViewById(R.id.tvName)
@@ -21,8 +24,8 @@ class LentaAdapter(private var userList: List<UserData>) :
         val tvSkills: TextView = itemView.findViewById(R.id.tvSkills)
         val tvExtra: TextView = itemView.findViewById(R.id.tvExtra)
         val tvGoal: LinearLayout = itemView.findViewById(R.id.tvGoal)
+        val btnMessage: MaterialButton = itemView.findViewById(R.id.btnMessage)
 
-        // Контейнеры для скрытия
         val blockDescription: ViewGroup = tvDescription.parent as ViewGroup
         val blockWork: ViewGroup = tvWork.parent as ViewGroup
         val blockSkills: ViewGroup = tvSkills.parent as ViewGroup
@@ -41,10 +44,9 @@ class LentaAdapter(private var userList: List<UserData>) :
         // Имя и специальность
         holder.tvName.text = listOfNotNull(user.name, user.specialization).joinToString(", ")
 
-        // Возраст + вуз
+        // Возраст и вуз
         val age = calculateAge(user.birthDate)
-        val ageAndUniversity = listOfNotNull(age, user.vuzName).joinToString(", ")
-        holder.tvAgeUniversity.text = ageAndUniversity
+        holder.tvAgeUniversity.text = listOfNotNull(age, user.vuzName).joinToString(", ")
 
         // Описание
         if (!user.description.isNullOrBlank()) {
@@ -85,7 +87,6 @@ class LentaAdapter(private var userList: List<UserData>) :
             is List<*> -> goal.filterIsInstance<String>().filter { it.isNotBlank() }
             else -> emptyList()
         }
-
         for (goal in goalList) {
             val goalTextView = TextView(holder.tvGoal.context).apply {
                 text = goal
@@ -94,8 +95,12 @@ class LentaAdapter(private var userList: List<UserData>) :
             }
             holder.tvGoal.addView(goalTextView)
         }
-
         holder.tvGoal.visibility = if (goalList.isNotEmpty()) View.VISIBLE else View.GONE
+
+        // Кнопка отправить сообщение
+        holder.btnMessage.setOnClickListener {
+            onUserClick(user)
+        }
     }
 
     override fun getItemCount(): Int = userList.size
@@ -106,7 +111,7 @@ class LentaAdapter(private var userList: List<UserData>) :
     }
 
     private fun calculateAge(birthDate: String): String? {
-        try {
+        return try {
             val parts = birthDate.split("/")
             if (parts.size != 3) return null
 
@@ -122,22 +127,18 @@ class LentaAdapter(private var userList: List<UserData>) :
             val month = monthMap[monthStr] ?: return null
 
             val today = Calendar.getInstance()
-            val birth = Calendar.getInstance().apply {
-                set(year, month - 1, day)
-            }
+            val birth = Calendar.getInstance().apply { set(year, month - 1, day) }
 
             var age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR)
-            if (today.get(Calendar.DAY_OF_YEAR) < birth.get(Calendar.DAY_OF_YEAR)) {
-                age--
-            }
+            if (today.get(Calendar.DAY_OF_YEAR) < birth.get(Calendar.DAY_OF_YEAR)) age--
 
-            return "$age " + when {
+            "$age " + when {
                 age % 10 == 1 && age % 100 != 11 -> "год"
-                age % 10 in 2..4 && (age % 100 !in 12..14) -> "года"
+                age % 10 in 2..4 && age % 100 !in 12..14 -> "года"
                 else -> "лет"
             }
         } catch (e: Exception) {
-            return null
+            null
         }
     }
 }
