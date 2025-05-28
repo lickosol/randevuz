@@ -96,7 +96,7 @@ class LentaAdapter(
             holder.tvSkills.text = spannable
             holder.blockSkills.visibility = View.VISIBLE
         } else {
-            holder.tvSkills.visibility = View.GONE
+            holder.blockSkills.visibility = View.GONE
         }
 
         // Внеучебная деятельность
