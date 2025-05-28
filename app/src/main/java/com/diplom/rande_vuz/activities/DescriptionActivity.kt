@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.diplom.rande_vuz.R
 import com.diplom.rande_vuz.models.UserData
+import com.diplom.rande_vuz.registration.PhotoRegistrationActivity
 
 class DescriptionActivity : AppCompatActivity() {
     private lateinit var userData: UserData
@@ -27,7 +28,7 @@ class DescriptionActivity : AppCompatActivity() {
                 Toast.makeText(this, "Поле не должно быть пустым", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            Intent(this, PasswordRegistrationActivity::class.java).apply {
+            Intent(this, PhotoRegistrationActivity::class.java).apply {
                 putExtra("userData", userData)
                 startActivity(this)
             }

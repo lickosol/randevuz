@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -14,6 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Rande_vuz"
         tools:targetApi="31">
+        <activity
+            android:name=".registration.PhotoRegistrationActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+
         <service
             android:name="com.google.firebase.components.ComponentDiscoveryService"
             android:exported="false"
@@ -25,59 +33,59 @@
                 android:name="com.google.firebase.components:com.google.firebase.database.FirebaseDatabaseRegistrar"
                 android:value="com.google.firebase.components.ComponentRegistrar" />
         </service>
+
         <activity
             android:name=".activities.AfterRegistrationActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-             />
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.WhereStudyActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.BirthDateActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.NameRegisterActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.SpecializationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.SkillsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.ExtracurricularActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.WorkActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.GoalActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.DescriptionActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.PasswordRegistrationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.LoginActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -91,7 +99,7 @@
         <activity
             android:name=".ui.profile.EditProfileActivity"
             android:label="Редактировать профиль"
-            android:parentActivityName=".ui.profile.ProfileFragment" >
+            android:parentActivityName=".ui.profile.ProfileFragment">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.profile.ProfileFragment" />

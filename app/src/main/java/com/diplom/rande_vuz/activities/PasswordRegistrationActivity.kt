@@ -66,7 +66,8 @@ class PasswordRegistrationActivity : AppCompatActivity() {
             "work" to (userData.work ?: ""),
             "goal" to (userData.goal ?: emptyList<String>()),
             "description" to (userData.description ?: ""),
-            "email" to (userData.email ?: "")
+            "email" to (userData.email ?: ""),
+            "profilePhotoPath" to (userData.profilePhotoPath ?: "")
         )
 
         database.reference.child("users").child(userId).setValue(userMap)
