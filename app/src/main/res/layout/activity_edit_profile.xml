@@ -35,6 +35,7 @@
                     android:src="@drawable/ic_profile_placeholder"
                     android:contentDescription="@string/profile_image"
                     android:padding="4dp"/>
+
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -218,6 +219,14 @@
                             android:inputType="textMultiLine"
                             android:lines="4"/>
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/buttonChangePhoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:text="Изменить фото" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
