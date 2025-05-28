@@ -10,6 +10,11 @@ import com.diplom.rande_vuz.R
 import com.diplom.rande_vuz.models.UserData
 import com.google.android.material.button.MaterialButton
 import java.util.*
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import android.view.ContextThemeWrapper
+import androidx.core.content.ContextCompat
+import android.content.res.ColorStateList
 
 class LentaAdapter(
     private var userList: List<UserData>,
@@ -23,7 +28,7 @@ class LentaAdapter(
         val tvWork: TextView = itemView.findViewById(R.id.tvWork)
         val tvSkills: TextView = itemView.findViewById(R.id.tvSkills)
         val tvExtra: TextView = itemView.findViewById(R.id.tvExtra)
-        val tvGoal: LinearLayout = itemView.findViewById(R.id.tvGoal)
+        val tvGoal: com.google.android.material.chip.ChipGroup = itemView.findViewById(R.id.tvGoal)
         val btnMessage: MaterialButton = itemView.findViewById(R.id.btnMessage)
 
         val blockDescription: ViewGroup = tvDescription.parent as ViewGroup
@@ -80,7 +85,6 @@ class LentaAdapter(
             holder.blockExtra.visibility = View.GONE
         }
 
-        // Цель
         holder.tvGoal.removeAllViews()
         val goalList = when (val goal = user.goal) {
             is String -> if (goal.isNotBlank()) listOf(goal) else emptyList()
@@ -88,16 +92,27 @@ class LentaAdapter(
             else -> emptyList()
         }
         for (goal in goalList) {
-            val goalTextView = TextView(holder.tvGoal.context).apply {
+            val chip = Chip(holder.tvGoal.context).apply {
                 text = goal
-                setTextAppearance(R.style.TagText)
-                setPadding(8, 4, 8, 4)
+                isClickable = false
+                isCheckable = false
+
+                chipBackgroundColor = ColorStateList.valueOf(
+                    ContextCompat.getColor(context, R.color.white)
+                )
+                chipStrokeColor = ColorStateList.valueOf(
+                    ContextCompat.getColor(context, R.color.soft)
+                )
+
+                setTextColor(ContextCompat.getColor(context, R.color.primary))
+
+                val d = resources.displayMetrics.density
+                setPadding((12*d).toInt(), (4*d).toInt(), (12*d).toInt(), (4*d).toInt())
             }
-            holder.tvGoal.addView(goalTextView)
+            holder.tvGoal.addView(chip)
         }
         holder.tvGoal.visibility = if (goalList.isNotEmpty()) View.VISIBLE else View.GONE
 
-        // Кнопка отправить сообщение
         holder.btnMessage.setOnClickListener {
             onUserClick(user)
         }
