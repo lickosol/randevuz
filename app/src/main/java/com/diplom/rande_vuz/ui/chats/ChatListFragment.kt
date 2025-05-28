@@ -6,13 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.diplom.rande_vuz.R
 import com.diplom.rande_vuz.models.Chat
+import com.diplom.rande_vuz.ui.message.MessageFragmentDirections
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import androidx.navigation.fragment.findNavController
-import com.diplom.rande_vuz.ui.message.MessageFragmentDirections
 
 class ChatListFragment : Fragment() {
 
@@ -35,19 +35,17 @@ class ChatListFragment : Fragment() {
 
             val action = MessageFragmentDirections.actionChatListToChat(
                 chatId = chat.id,
-                otherUserId = otherUserId // Определяем динамически
+                otherUserId = otherUserId
             )
             findNavController().navigate(action)
         }
 
         recyclerView.adapter = adapter
-
         loadUserChats()
     }
 
     private fun loadUserChats() {
         val userId = currentUserId ?: return
-
         val chatsRef = FirebaseDatabase.getInstance().getReference("chats")
 
         chatsRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -71,63 +69,65 @@ class ChatListFragment : Fragment() {
                     val timestamp = chatSnapshot.child("timestamp").getValue(Long::class.java) ?: 0L
                     val userIds = chatSnapshot.child("userIds").children.mapNotNull { it.getValue(String::class.java) }
 
-                    // Находим otherUserId динамически
                     val otherUserId = userIds.firstOrNull { it != userId } ?: userId
 
                     val userNames = mutableMapOf<String, String>()
+                    val userPhotos = mutableMapOf<String, String?>()
                     val usersRef = FirebaseDatabase.getInstance().getReference("users")
 
-                    var loadedUserNames = 0
+                    var loadedUserProfiles = 0
 
                     for (uid in userIds) {
-                        usersRef.child(uid).child("name").addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(nameSnapshot: DataSnapshot) {
-                                val name = nameSnapshot.getValue(String::class.java) ?: "Unknown"
-                                userNames[uid] = name
+                        usersRef.child(uid).get().addOnSuccessListener { userSnap ->
+                            val name = userSnap.child("name").getValue(String::class.java) ?: "Unknown"
+                            val photoPath = userSnap.child("profilePhotoPath").getValue(String::class.java)
 
-                                loadedUserNames++
-                                if (loadedUserNames == userIds.size) {
-                                    val chatName = userNames[otherUserId] ?: "Unknown"
+                            userNames[uid] = name
+                            userPhotos[uid] = photoPath
 
-                                    val chat = Chat(
-                                        id = chatId,
-                                        userIds = userIds,
-                                        lastMessage = lastMessage,
-                                        timestamp = timestamp,
-                                        chatName = chatName
-                                    )
-                                    chatList.add(chat)
+                            loadedUserProfiles++
+                            if (loadedUserProfiles == userIds.size) {
+                                val chatName = userNames[otherUserId] ?: "Unknown"
+                                val chatPhotoPath = userPhotos[otherUserId]
 
-                                    loadedChats++
-                                    if (loadedChats == chatsToLoad.size) {
-                                        adapter.submitList(chatList.sortedByDescending { it.timestamp })
-                                    }
+                                val chat = Chat(
+                                    id = chatId,
+                                    userIds = userIds,
+                                    lastMessage = lastMessage,
+                                    timestamp = timestamp,
+                                    chatName = chatName,
+                                    chatPhotoPath = chatPhotoPath
+                                )
+
+                                chatList.add(chat)
+
+                                loadedChats++
+                                if (loadedChats == chatsToLoad.size) {
+                                    adapter.submitList(chatList.sortedByDescending { it.timestamp })
                                 }
                             }
+                        }.addOnFailureListener {
+                            loadedUserProfiles++
+                            if (loadedUserProfiles == userIds.size) {
+                                val chatName = userNames[otherUserId] ?: "Unknown"
 
-                            override fun onCancelled(error: DatabaseError) {
-                                userNames[uid] = "Unknown"
+                                val chat = Chat(
+                                    id = chatId,
+                                    userIds = userIds,
+                                    lastMessage = lastMessage,
+                                    timestamp = timestamp,
+                                    chatName = chatName,
+                                    chatPhotoPath = null
+                                )
 
-                                loadedUserNames++
-                                if (loadedUserNames == userIds.size) {
-                                    val chatName = userNames[otherUserId] ?: "Unknown"
+                                chatList.add(chat)
 
-                                    val chat = Chat(
-                                        id = chatId,
-                                        userIds = userIds,
-                                        lastMessage = lastMessage,
-                                        timestamp = timestamp,
-                                        chatName = chatName
-                                    )
-                                    chatList.add(chat)
-
-                                    loadedChats++
-                                    if (loadedChats == chatsToLoad.size) {
-                                        adapter.submitList(chatList.sortedByDescending { it.timestamp })
-                                    }
+                                loadedChats++
+                                if (loadedChats == chatsToLoad.size) {
+                                    adapter.submitList(chatList.sortedByDescending { it.timestamp })
                                 }
                             }
-                        })
+                        }
                     }
                 }
             }

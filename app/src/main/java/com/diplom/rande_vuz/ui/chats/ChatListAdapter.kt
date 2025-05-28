@@ -11,6 +11,9 @@ import com.diplom.rande_vuz.R
 import com.diplom.rande_vuz.models.Chat
 import java.text.SimpleDateFormat
 import java.util.*
+import android.graphics.BitmapFactory
+import android.widget.ImageView
+
 
 class ChatListAdapter(
     private val onChatClick: (Chat) -> Unit
@@ -20,6 +23,8 @@ class ChatListAdapter(
         val usernameTextView: TextView = view.findViewById(R.id.chatUserName)
         val lastMessageTextView: TextView = view.findViewById(R.id.chatLastMessage)
         val messageDateTextView: TextView = view.findViewById(R.id.chatMessageDate)
+        val avatarImageView: ImageView = view.findViewById(R.id.imgAvatar)
+
 
         init {
             view.setOnClickListener {
@@ -41,6 +46,18 @@ class ChatListAdapter(
         holder.lastMessageTextView.text = chat.lastMessage
 
         holder.messageDateTextView.text = formatTimestamp(chat.timestamp)
+
+        chat.chatPhotoPath?.let { path ->
+            val bitmap = BitmapFactory.decodeFile(path)
+            if (bitmap != null) {
+                holder.avatarImageView.setImageBitmap(bitmap)
+            } else {
+                holder.avatarImageView.setImageResource(R.drawable.ic_profile_placeholder)
+            }
+        } ?: run {
+            holder.avatarImageView.setImageResource(R.drawable.ic_profile_placeholder)
+        }
+
     }
 
 
