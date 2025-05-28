@@ -29,8 +29,15 @@
 
         <argument
             android:name="chatId"
+            app:argType="string"
+            android:defaultValue="@null"
+            app:nullable="true" />
+
+        <argument
+            android:name="otherUserId"
             app:argType="string" />
     </fragment>
+
 
     <action
         android:id="@+id/action_chatList_to_chat"
@@ -39,4 +46,25 @@
         app:exitAnim="@anim/slide_out_left"
         app:popEnterAnim="@anim/slide_in_left"
         app:popExitAnim="@anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_lenta_to_chatFragment"
+        app:destination="@id/chatFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_global_to_chat"
+        app:destination="@id/chatFragment">
+        <argument
+            android:name="chatId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="otherUserId"
+            app:argType="string" />
+    </action>
 </navigation>

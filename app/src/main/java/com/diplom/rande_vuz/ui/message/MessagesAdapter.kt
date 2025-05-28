@@ -1,10 +1,12 @@
 package com.diplom.rande_vuz.ui.message
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.diplom.rande_vuz.databinding.ItemMessageBinding
 import com.diplom.rande_vuz.models.MessageDisplay
+import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -38,7 +40,17 @@ class MessagesAdapter : RecyclerView.Adapter<MessagesAdapter.MessageViewHolder>(
             binding.textViewMessageContent.text = message.content
             binding.textViewSenderName.text = message.senderName
             binding.textViewMessageTime.text = formatTimestamp(message.timestamp)
+
+            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+            if (message.senderId == currentUserId) {
+                // Показать статус прочтения только для своих сообщений
+                binding.textViewReadStatus.visibility = View.VISIBLE
+                binding.textViewReadStatus.text = if (message.read) "Прочитано" else "Непрочитано"
+            } else {
+                binding.textViewReadStatus.visibility = View.GONE
+            }
         }
+
     }
 
     private fun formatTimestamp(timestamp: Long): String {

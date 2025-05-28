@@ -11,11 +11,9 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // Инициализация Firebase с логированием
         FirebaseApp.initializeApp(this)
-        Firebase.database.setLogLevel(Logger.Level.DEBUG)  // Включение подробного логгирования
+        Firebase.database.setLogLevel(Logger.Level.DEBUG)
 
-        // Проверка инициализации
         try {
             val db = Firebase.database("https://randevuz-default-rtdb.europe-west1.firebasedatabase.app/")
             db.setPersistenceEnabled(true)

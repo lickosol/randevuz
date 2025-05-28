@@ -4,6 +4,7 @@ import com.google.firebase.database.PropertyName
 import java.io.Serializable
 
 data class UserData(
+    var uid: String = "",
     var name: String = "",
     var birthDate: String = "",
     @get:PropertyName("vuz_name")
