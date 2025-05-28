@@ -43,7 +43,7 @@ class LentaAdapter(private var userList: List<UserData>) :
 
         // Возраст + вуз
         val age = calculateAge(user.birthDate)
-        val ageAndUniversity = listOfNotNull(age, user.vuzName).joinToString(" ")
+        val ageAndUniversity = listOfNotNull(age, user.vuzName).joinToString(", ")
         holder.tvAgeUniversity.text = ageAndUniversity
 
         // Описание
