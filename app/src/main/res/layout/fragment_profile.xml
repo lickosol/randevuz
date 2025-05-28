@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
     android:background="@color/white"
-    android:clipToPadding="false"
+    android:fillViewport="true"
     android:paddingBottom="72dp">
 
     <LinearLayout
@@ -18,16 +17,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginBottom="24dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginBottom="24dp">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="56dp"
-                app:strokeColor="@color/soft"
+                app:cardElevation="6dp"
                 app:strokeWidth="2dp"
-                app:elevation="6dp">
+                app:strokeColor="@color/soft"
+                android:layout_marginTop="5dp">
 
                 <ImageView
                     android:id="@+id/imageViewProfile"
@@ -36,21 +36,37 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_profile_placeholder"
                     android:contentDescription="@string/profile_image"
-                    android:padding="4dp"/>
+                    android:layout_margin="4dp" />
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/textViewName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/adigiana_ultra"
-                android:gravity="center"
-                android:letterSpacing="0.03"
-                android:text="@string/name"
+                android:text="Настёна, Филология, 4 курс"
+                android:textSize="24sp"
                 android:textColor="@color/primary_dark"
-                android:textSize="32sp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/adigiana_ultra"
+                android:letterSpacing="0.02"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/textViewBirthDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="22 года, БФУ, Калининград"
+                android:textSize="14sp"
+                android:textColor="@color/secondary"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/textViewEmail"
+                android:text="Почта"
+                android:drawablePadding="12dp"                    android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
@@ -58,193 +74,147 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             app:cardCornerRadius="16dp"
-            app:elevation="2dp">
+            app:cardElevation="2dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingVertical="8dp">
-
-                <TextView
-                    android:id="@+id/textViewBirthDate"
-                    style="@style/InfoCard"
-                    android:text="@string/age"
-                    android:drawablePadding="12dp"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/soft"
-                    android:layout_marginHorizontal="16dp"/>
-
-                <TextView
-                    android:id="@+id/textViewSpecialization"
-                    style="@style/InfoCard"
-                    android:text="Специализация"
-                    android:drawablePadding="12dp"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/soft"
-                    android:layout_marginHorizontal="16dp"/>
-
-                <TextView
-                    android:id="@+id/textViewVuzName"
-                    style="@style/InfoCard"
-                    android:text="ВУЗ"
-                    android:drawablePadding="12dp"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="16dp"/>
-
-                <TextView
-                    android:id="@+id/textViewEmail"
-                    style="@style/InfoCard"
-                    android:text="Почта"
-                    android:drawablePadding="12dp"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:elevation="2dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/skills"
-                    android:textColor="@color/primary_dark"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="12dp"/>
-
-                <com.google.android.flexbox.FlexboxLayout
-                    android:id="@+id/skillsContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:flexWrap="wrap"
-                    app:alignItems="flex_start"
-                    app:showDividerHorizontal="middle"
-                    android:padding="4dp">
-
-                </com.google.android.flexbox.FlexboxLayout>
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:elevation="2dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Цели"
-                    android:textColor="@color/primary_dark"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="12dp"/>
-
-                <com.google.android.flexbox.FlexboxLayout
-                    android:id="@+id/goalsContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:flexWrap="wrap"
-                    app:alignItems="flex_start"
-                    app:showDividerHorizontal="middle"
-                    android:padding="4dp">
-
-                </com.google.android.flexbox.FlexboxLayout>
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:elevation="2dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingVertical="8dp">
-
-                <TextView
-                    android:id="@+id/textViewWork"
-                    style="@style/InfoCard"
-                    android:text="Работа"
-                    android:drawablePadding="12dp"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/soft"
-                    android:layout_marginHorizontal="16dp"/>
-
-                <TextView
-                    android:id="@+id/textViewExtracurricular"
-                    style="@style/InfoCard"
-                    android:text="Внеучебка"
-                    android:drawablePadding="12dp"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            app:cardCornerRadius="16dp"
-            app:elevation="2dp">
+                android:text="О себе"
+                android:textColor="@color/primary_dark"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"/>
 
             <TextView
                 android:id="@+id/textViewDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/about"
-                android:textColor="@color/primary_dark"
-                android:lineSpacingMultiplier="1.3"
+                android:layout_marginTop="26dp"
+                android:padding="16dp"
+                android:text="Описание: Нахожусь в длительном поиске таких же креативных и веселых людей, как и сама :) Буду рада подружиться с кем-то из БФУ с других направлений, чтобы поделиться опытом (друг с другом)."
                 android:textSize="16sp"
-                android:padding="20dp"/>
+                android:lineSpacingMultiplier="1.3"
+                android:textColor="@color/primary_dark" />
         </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Цели"
+                    android:textColor="@color/primary_dark"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"/>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/goalsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleLine="false"
+                    app:chipSpacing="8dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Навыки:"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/primary_dark"
+                    android:layout_marginBottom="8dp" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/skillsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleLine="false"
+                    app:chipSpacing="8dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Дополнительно"
+                    android:textColor="@color/primary_dark"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Место работы:"
+                    android:id="@+id/textViewWork"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/soft"
+                    android:layout_marginVertical="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Внеучебка"
+                    android:id="@+id/textViewExtracurricular"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonEditProfile"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:text="РЕДАКТИРОВАТЬ ПРОФИЛЬ"
+            android:textAllCaps="true"
             android:layout_marginBottom="16dp"
-            android:text="Редактировать профиль"
-            android:textColor="@color/white"
             app:cornerRadius="24dp"
-            app:backgroundTint="@color/primary"
-            app:iconSize="24dp"
             app:iconGravity="textStart"
-            app:iconPadding="12dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            android:textColor="@color/white"
+            app:backgroundTint="@color/primary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonLogout"
@@ -252,7 +222,7 @@
             android:layout_width="150dp"
             android:layout_gravity="center_horizontal"
             android:layout_height="48dp"
-            android:text="Выйти"
+            android:text="ВЫЙТИ"
             android:textAllCaps="false"
             android:textColor="@color/primary"
             android:textSize="16sp"
@@ -261,6 +231,5 @@
             app:strokeWidth="1.5dp"
             app:iconTint="@color/primary"
             app:iconPadding="8dp"/>
-
     </LinearLayout>
 </ScrollView>
