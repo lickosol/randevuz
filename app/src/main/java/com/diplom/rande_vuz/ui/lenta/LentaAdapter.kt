@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.diplom.rande_vuz.R
 import com.diplom.rande_vuz.models.UserData
+import java.util.*
 
 class LentaAdapter(private var userList: List<UserData>) :
     RecyclerView.Adapter<LentaAdapter.UserViewHolder>() {
@@ -40,8 +41,10 @@ class LentaAdapter(private var userList: List<UserData>) :
         // Имя и специальность
         holder.tvName.text = listOfNotNull(user.name, user.specialization).joinToString(", ")
 
-        // Возраст и вуз
-        holder.tvAgeUniversity.text = listOfNotNull(user.birthDate, user.vuzName).joinToString(", ")
+        // Возраст + вуз
+        val age = calculateAge(user.birthDate)
+        val ageAndUniversity = listOfNotNull(age, user.vuzName).joinToString(" ")
+        holder.tvAgeUniversity.text = ageAndUniversity
 
         // Описание
         if (!user.description.isNullOrBlank()) {
@@ -100,5 +103,41 @@ class LentaAdapter(private var userList: List<UserData>) :
     fun updateUsers(newList: List<UserData>) {
         userList = newList
         notifyDataSetChanged()
+    }
+
+    private fun calculateAge(birthDate: String): String? {
+        try {
+            val parts = birthDate.split("/")
+            if (parts.size != 3) return null
+
+            val day = parts[0].toIntOrNull() ?: return null
+            val monthStr = parts[1].lowercase(Locale.getDefault())
+            val year = parts[2].toIntOrNull() ?: return null
+
+            val monthMap = mapOf(
+                "январь" to 1, "февраль" to 2, "март" to 3, "апрель" to 4,
+                "май" to 5, "июнь" to 6, "июль" to 7, "август" to 8,
+                "сентябрь" to 9, "октябрь" to 10, "ноябрь" to 11, "декабрь" to 12
+            )
+            val month = monthMap[monthStr] ?: return null
+
+            val today = Calendar.getInstance()
+            val birth = Calendar.getInstance().apply {
+                set(year, month - 1, day)
+            }
+
+            var age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR)
+            if (today.get(Calendar.DAY_OF_YEAR) < birth.get(Calendar.DAY_OF_YEAR)) {
+                age--
+            }
+
+            return "$age " + when {
+                age % 10 == 1 && age % 100 != 11 -> "год"
+                age % 10 in 2..4 && (age % 100 !in 12..14) -> "года"
+                else -> "лет"
+            }
+        } catch (e: Exception) {
+            return null
+        }
     }
 }
