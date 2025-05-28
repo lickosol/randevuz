@@ -63,7 +63,8 @@
             <TextView
                 android:id="@+id/textViewEmail"
                 android:text="Почта"
-                android:drawablePadding="12dp"                    android:layout_width="wrap_content"
+                android:drawablePadding="12dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:layout_marginTop="4dp" />

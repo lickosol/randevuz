@@ -1,6 +1,7 @@
 package com.diplom.rande_vuz.ui.profile
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.diplom.rande_vuz.databinding.FragmentProfileBinding
 import com.diplom.rande_vuz.ui.profile.EditProfileActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.diplom.rande_vuz.R
+import java.io.File
 import java.util.Calendar
 import java.util.Locale
 
@@ -57,6 +59,19 @@ class ProfileFragment : Fragment() {
                     .joinToString(", ")
 
                 binding.textViewEmail.text = it.email
+                val photoPath = it.profilePhotoPath
+                if (!photoPath.isNullOrBlank()) {
+                    val file = File(photoPath)
+                    if (file.exists()) {
+                        val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                        binding.imageViewProfile.setImageBitmap(bitmap)
+                    } else {
+                        binding.imageViewProfile.setImageResource(R.drawable.ic_profile_placeholder)
+                    }
+                } else {
+                    binding.imageViewProfile.setImageResource(R.drawable.ic_profile_placeholder)
+                }
+
                 binding.textViewWork.text = it.work
                 binding.textViewExtracurricular.text = it.extracurricular
                 binding.textViewDescription.text = it.description
