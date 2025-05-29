@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,6 +41,8 @@ class LentaFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        handleBottomSystemInsets()
 
         val currentUser = FirebaseAuth.getInstance().currentUser
         Log.d("LentaFragment", "Текущий UID: ${currentUser?.uid}")
@@ -81,6 +85,19 @@ class LentaFragment : Fragment() {
             Log.d("LentaFragment", "Получено пользователей: ${users.size}")
             fullUserList = users
             applyGoalFilter()
+        }
+    }
+
+    private fun handleBottomSystemInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            binding.rvProfiles.setPadding(
+                binding.rvProfiles.paddingLeft,
+                binding.rvProfiles.paddingTop,
+                binding.rvProfiles.paddingRight,
+                systemBars.bottom + 150
+            )
+            insets
         }
     }
 
