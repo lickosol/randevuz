@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.diplom.rande_vuz.models.Message
 import com.diplom.rande_vuz.models.MessageDisplay
 import com.diplom.rande_vuz.models.SendStatus
+import com.diplom.rande_vuz.models.UserData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -18,6 +19,9 @@ class MessageViewModel : ViewModel() {
 
     private val database = FirebaseDatabase.getInstance()
     private val userCache = mutableMapOf<String, String>()
+
+    private val _otherUser = MutableLiveData<UserData>()
+    val otherUser: LiveData<UserData> = _otherUser
 
     fun loadMessages(chatId: String) {
         val messagesRef = database.getReference("chats").child(chatId).child("messages")
@@ -68,6 +72,21 @@ class MessageViewModel : ViewModel() {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+
+    fun loadOtherUser(userId: String) {
+        database.getReference("users").child(userId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val user = snapshot.getValue(UserData::class.java)
+                    user?.let { _otherUser.value = it }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("LoadUserError", "Не удалось загрузить пользователя", error.toException())
+                }
+            })
+    }
+
 
 
     fun checkExistingChat(otherUserId: String, callback: (String?) -> Unit) {

@@ -1,116 +1,131 @@
+// MessageFragment.kt
 package com.diplom.rande_vuz.ui.message
 
-import MessageViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.diplom.rande_vuz.databinding.FragmentMessageBinding
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.diplom.rande_vuz.R
 import com.diplom.rande_vuz.models.SendStatus
+import MessageViewModel
 
 class MessageFragment : Fragment() {
 
-    private lateinit var viewModel: MessageViewModel
-    private lateinit var binding: FragmentMessageBinding
-    private lateinit var messageAdapter: MessagesAdapter
-
     private val args by navArgs<MessageFragmentArgs>()
-
     private var actualChatId: String? = null
+
+    private lateinit var btnBack: ImageButton
+    private lateinit var ivAvatar: ImageView
+    private lateinit var tvName: TextView
+    private lateinit var tvSubtitle: TextView
+    private lateinit var rvMessages: RecyclerView
+    private lateinit var etMessage: EditText
+    private lateinit var btnSend: ImageButton
+
+    private lateinit var viewModel: MessageViewModel
+    private lateinit var adapter: MessagesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentMessageBinding.inflate(inflater, container, false)
+    ): View? {
+        val root = inflater.inflate(R.layout.fragment_message, container, false)
+
+        btnBack     = root.findViewById(R.id.buttonBack)
+        ivAvatar    = root.findViewById(R.id.imageAvatar)
+        tvName      = root.findViewById(R.id.textViewChatName)
+        tvSubtitle  = root.findViewById(R.id.textViewChatSubtitle)
+        rvMessages  = root.findViewById(R.id.recyclerViewMessages)
+        etMessage   = root.findViewById(R.id.editTextMessage)
+        btnSend     = root.findViewById(R.id.buttonSend)
+
         viewModel = ViewModelProvider(this)[MessageViewModel::class.java]
+        adapter = MessagesAdapter()
 
-        val args by navArgs<MessageFragmentArgs>()
-        val chatId = args.chatId
-        val otherUserId = args.otherUserId
-
-        actualChatId = chatId
-
+        setupToolbar()
         setupRecyclerView()
         setupObservers()
+        setupSendButton()
 
-        if (chatId != null) {
-            // Загружаем существующий чат
-            viewModel.loadMessages(chatId)
+        actualChatId = args.chatId
+        if (actualChatId != null) {
+            viewModel.loadMessages(actualChatId!!)
         } else {
-            // Проверяем существующий чат
-            viewModel.checkExistingChat(otherUserId) { existingChatId ->
-                if (existingChatId != null) {
-                    // Чат существует - загружаем
-                    actualChatId = existingChatId
-                    viewModel.loadMessages(existingChatId)
+            viewModel.checkExistingChat(args.otherUserId) { existing ->
+                existing?.let {
+                    actualChatId = it
+                    viewModel.loadMessages(it)
                 }
-                // Если чата нет - он создастся при отправке первого сообщения
             }
         }
 
-        setupSendMessage(otherUserId)
-        return binding.root
+        viewModel.otherUser.observe(viewLifecycleOwner) { user ->
+            tvName.text = user.name
+            tvSubtitle.text = "${user.vuzName}, ${user.specialization}"
+            Glide.with(requireContext())
+                .load(user.profilePhotoPath)
+                .placeholder(R.drawable.ic_profile_placeholder)
+                .circleCrop()
+                .into(ivAvatar)
+        }
+        viewModel.loadOtherUser(args.otherUserId)
+
+        return root
+    }
+
+    private fun setupToolbar() {
+        btnBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun setupRecyclerView() {
-        messageAdapter = MessagesAdapter()
-        binding.recyclerViewMessages.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = messageAdapter
-        }
+        rvMessages.layoutManager = LinearLayoutManager(requireContext())
+        rvMessages.adapter = adapter
     }
 
     private fun setupObservers() {
-        viewModel.messages.observe(viewLifecycleOwner) { messages ->
-            messageAdapter.submitList(messages)
-            if (messages.isNotEmpty()) {
-                binding.recyclerViewMessages.scrollToPosition(messages.size - 1)
-            }
+        viewModel.messages.observe(viewLifecycleOwner) { list ->
+            adapter.submitList(list)
+            if (list.isNotEmpty())
+                rvMessages.scrollToPosition(list.size - 1)
         }
-
         viewModel.sendStatus.observe(viewLifecycleOwner) { status ->
-            when (status) {
-                is SendStatus.Error -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "Ошибка отправки: ${status.exception.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                else -> {} // Успех обрабатывается молча
+            if (status is SendStatus.Error) {
+                Toast.makeText(
+                    requireContext(),
+                    "Ошибка отправки: ${status.exception.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
-    private fun setupSendMessage(otherUserId: String) {
-        binding.buttonSend.setOnClickListener {
-            val messageText = binding.editTextMessage.text.toString().trim()
+    private fun setupSendButton() {
+        btnSend.setOnClickListener {
+            val text = etMessage.text.toString().trim()
+            if (text.isBlank()) return@setOnClickListener
 
-            if (messageText.isBlank()) return@setOnClickListener
-
-            if (actualChatId != null) {
-                // Отправка в существующий чат
-                viewModel.sendMessage(actualChatId!!, messageText)
-            } else {
-                // Создание нового чата с проверкой
-                if (otherUserId.isBlank()) {
-                    Toast.makeText(context, "Ошибка: не указан собеседник", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-
-                viewModel.createChatWithMessage(otherUserId, messageText) { newChatId ->
-                    actualChatId = newChatId
-                    viewModel.loadMessages(newChatId)
+            actualChatId?.let {
+                viewModel.sendMessage(it, text)
+            } ?: run {
+                viewModel.createChatWithMessage(args.otherUserId, text) { newId ->
+                    actualChatId = newId
+                    viewModel.loadMessages(newId)
                 }
             }
-            binding.editTextMessage.text.clear()
+            etMessage.text.clear()
         }
     }
 }
