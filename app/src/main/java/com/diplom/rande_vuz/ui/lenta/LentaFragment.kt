@@ -5,10 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.diplom.rande_vuz.R
 import com.diplom.rande_vuz.activities.AfterRegistrationActivity
 import com.diplom.rande_vuz.databinding.FragmentLentaBinding
 import com.diplom.rande_vuz.models.UserData
@@ -49,24 +51,29 @@ class LentaFragment : Fragment() {
             (activity as? AfterRegistrationActivity)
                 ?.navigateToChatFromOtherTab(chatId = null, otherUserId = user.uid)
         }
+
         binding.rvProfiles.layoutManager = LinearLayoutManager(requireContext())
         binding.rvProfiles.adapter = adapter
 
+        binding.btnToggleFilter.setOnClickListener {
+            toggleFilterVisibility()
+        }
+
         binding.btnApplyFilters.setOnClickListener {
             val selected = binding.chipGroupFilterGoals.checkedChipIds
-                .mapNotNull { id -> binding.chipGroupFilterGoals.findViewById<Chip>(id)?.text?.toString() }
+                .mapNotNull { id ->
+                    binding.chipGroupFilterGoals.findViewById<Chip>(id)?.text?.toString()
+                }
 
             if (selected.size == allGoals.size) {
                 binding.chipGroupFilterGoals.clearCheck()
-                binding.chipGroupFilterGoals.checkedChipIds.toList().forEach { id ->
-                    binding.chipGroupFilterGoals.findViewById<Chip>(id)?.isChecked = false
-                }
                 selectedGoals = emptyList()
             } else {
                 selectedGoals = selected
             }
 
             applyGoalFilter()
+            binding.filterCard.visibility = View.GONE
         }
 
         viewModel = ViewModelProvider(this)[LentaViewModel::class.java]
@@ -74,6 +81,18 @@ class LentaFragment : Fragment() {
             Log.d("LentaFragment", "Получено пользователей: ${users.size}")
             fullUserList = users
             applyGoalFilter()
+        }
+    }
+
+    private fun toggleFilterVisibility() {
+        if (binding.filterCard.visibility == View.VISIBLE) {
+            val anim = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_out)
+            binding.filterCard.startAnimation(anim)
+            binding.filterCard.visibility = View.GONE
+        } else {
+            binding.filterCard.visibility = View.VISIBLE
+            val anim = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
+            binding.filterCard.startAnimation(anim)
         }
     }
 

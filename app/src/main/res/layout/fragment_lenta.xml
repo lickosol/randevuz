@@ -9,15 +9,32 @@
     android:background="@color/white"
     tools:context=".ui.lenta.LentaFragment">
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnToggleFilter"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Фильтр"
+        android:textColor="?attr/colorPrimary"
+        app:icon="@drawable/ic_filter"
+        app:iconTint="?attr/colorPrimary"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"/>
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/filterCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:visibility="gone"
         app:cardCornerRadius="12dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/btnToggleFilter">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -91,9 +108,8 @@
         android:clipToPadding="false"
         android:padding="8dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/filterCard"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
+        app:layout_constraintTop_toBottomOf="@id/btnToggleFilter"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
