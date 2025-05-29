@@ -117,6 +117,7 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun saveProfile() {
         val updated = UserData(
+            uid = uid!!,
             name = binding.editTextName.text.toString().trim(),
             birthDate = binding.editTextBirthDate.text.toString().trim(),
             specialization = binding.editTextSpecialization.text.toString().trim(),
