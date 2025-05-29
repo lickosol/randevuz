@@ -76,7 +76,7 @@ class LentaAdapter(
                 append(user.description)
             }
             holder.blockDescription.visibility = View.VISIBLE
-        } else holder.blockDescription.visibility = View.GONE
+        } else holder.tvDescription.visibility = View.GONE
 
         // Работа
         if (!user.work.isNullOrBlank()) {
