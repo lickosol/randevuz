@@ -24,6 +24,7 @@ class ChatListAdapter(
         val lastMessageTextView: TextView = view.findViewById(R.id.chatLastMessage)
         val messageDateTextView: TextView = view.findViewById(R.id.chatMessageDate)
         val avatarImageView: ImageView = view.findViewById(R.id.imgAvatar)
+        val msgStatus: ImageView = view.findViewById(R.id.msgStatus)
 
 
         init {
@@ -47,6 +48,9 @@ class ChatListAdapter(
 
         holder.messageDateTextView.text = formatTimestamp(chat.timestamp)
 
+        // Устанавливаем видимость точки в зависимости от наличия непрочитанных сообщений
+        holder.msgStatus.visibility = if (chat.hasUnreadMessages) View.VISIBLE else View.GONE
+
         chat.chatPhotoPath?.let { path ->
             val bitmap = BitmapFactory.decodeFile(path)
             if (bitmap != null) {
@@ -57,7 +61,6 @@ class ChatListAdapter(
         } ?: run {
             holder.avatarImageView.setImageResource(R.drawable.ic_profile_placeholder)
         }
-
     }
 
 

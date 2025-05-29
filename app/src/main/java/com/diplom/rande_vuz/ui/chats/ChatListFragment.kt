@@ -13,6 +13,9 @@ import com.diplom.rande_vuz.models.Chat
 import com.diplom.rande_vuz.ui.message.MessageFragmentDirections
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 
 class ChatListFragment : Fragment() {
 
@@ -28,6 +31,8 @@ class ChatListFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         recyclerView = view.findViewById(R.id.chatRecyclerView)
         adapter = ChatListAdapter { chat ->
             val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return@ChatListAdapter
@@ -41,7 +46,35 @@ class ChatListFragment : Fragment() {
         }
 
         recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // Загружаем чаты при первом открытии
         loadUserChats()
+
+        // Добавляем слушатель для обновлений чатов в реальном времени
+        val userId = currentUserId ?: return
+        val chatsRef = FirebaseDatabase.getInstance().getReference("chats")
+
+        val valueEventListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // При любом изменении в структуре чатов перезагружаем список
+                loadUserChats()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("ChatListFragment", "Ошибка слушателя чатов: ${error.message}")
+            }
+        }
+
+        // Регистрируем слушатель
+        chatsRef.addValueEventListener(valueEventListener)
+
+        // Удаляем слушатель при уничтожении View
+        viewLifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onDestroy(owner: LifecycleOwner) {
+                chatsRef.removeEventListener(valueEventListener)
+            }
+        })
     }
 
     private fun loadUserChats() {
@@ -71,6 +104,13 @@ class ChatListFragment : Fragment() {
 
                     val otherUserId = userIds.firstOrNull { it != userId } ?: userId
 
+                    // Проверяем наличие непрочитанных сообщений
+                    val hasUnread = chatSnapshot.child("messages").children.any { messageSnap ->
+                        val read = messageSnap.child("read").getValue(Boolean::class.java) ?: true
+                        val senderId = messageSnap.child("senderId").getValue(String::class.java)
+                        !read && senderId != userId // Непрочитанные сообщения, которые не мы отправили
+                    }
+
                     val userNames = mutableMapOf<String, String>()
                     val userPhotos = mutableMapOf<String, String?>()
                     val usersRef = FirebaseDatabase.getInstance().getReference("users")
@@ -96,7 +136,8 @@ class ChatListFragment : Fragment() {
                                     lastMessage = lastMessage,
                                     timestamp = timestamp,
                                     chatName = chatName,
-                                    chatPhotoPath = chatPhotoPath
+                                    chatPhotoPath = chatPhotoPath,
+                                    hasUnreadMessages = hasUnread // Передаем информацию о непрочитанных
                                 )
 
                                 chatList.add(chat)
@@ -117,7 +158,8 @@ class ChatListFragment : Fragment() {
                                     lastMessage = lastMessage,
                                     timestamp = timestamp,
                                     chatName = chatName,
-                                    chatPhotoPath = null
+                                    chatPhotoPath = null,
+                                    hasUnreadMessages = hasUnread // Передаем информацию о непрочитанных
                                 )
 
                                 chatList.add(chat)
