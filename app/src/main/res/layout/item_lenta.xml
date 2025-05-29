@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:material="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -25,13 +24,13 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/black" />
 
+            <!-- Контейнер с именем и возрастом -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal|top">
 
                 <TextView
                     android:id="@+id/tvName"
@@ -51,6 +50,7 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
+            <!-- Цели (чипы) -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -67,15 +67,18 @@
                     app:chipSpacingVertical="8dp"
                     android:gravity="center" />
             </HorizontalScrollView>
+
         </FrameLayout>
 
+        <!-- Расширяемый блок с описанием -->
         <LinearLayout
+            android:id="@+id/expandableLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="16dp">
 
             <TextView
                 android:id="@+id/tvDescription"
@@ -84,7 +87,8 @@
                 android:paddingBottom="4dp"
                 android:textSize="14sp"
                 android:textColor="@color/primary_dark"
-                />
+                android:maxLines="2"
+                android:ellipsize="end"/>
 
             <TextView
                 android:id="@+id/tvWork"
@@ -93,8 +97,8 @@
                 android:paddingBottom="4dp"
                 android:textSize="14sp"
                 android:textColor="@color/primary_dark"
-                />
-
+                android:maxLines="2"
+                android:ellipsize="end"/>
 
             <TextView
                 android:id="@+id/tvSkills"
@@ -103,42 +107,59 @@
                 android:paddingBottom="4dp"
                 android:textSize="14sp"
                 android:textColor="@color/primary_dark"
-                />
+                android:maxLines="2"
+                android:ellipsize="end"/>
 
             <TextView
                 android:id="@+id/tvExtra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
+                android:paddingBottom="16dp"
                 android:textSize="14sp"
                 android:textColor="@color/primary_dark"
-                />
+                android:maxLines="2"
+                android:ellipsize="end"/>
 
-        </LinearLayout>
+            <!-- Горизонтальный контейнер для кнопок -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="5dp"
-            android:gravity="center">
+                <!-- Кнопка "Показать ещё" с центрированием -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnExpand"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Показать ещё "
+                    android:textColor="#90243B65"
+                    app:icon="@drawable/ic_expand_more"
+                    app:iconGravity="textEnd"
+                    app:iconPadding="0dp"
+                    app:iconTint="@color/blue" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnMessage"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="200dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_height="48dp"
-                android:text="НАПИСАТЬ"
-                android:textAllCaps="false"
-                android:textSize="16sp"
-                app:cornerRadius="24dp"
-                app:strokeColor="@color/soft"
-                app:iconGravity="textStart"
-                android:textColor="@color/white"
-                app:backgroundTint="@color/primary" />
+                <!-- Кнопка "Написать" всегда справа -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnMessage"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_alignParentEnd="true"
+                    android:minWidth="120dp"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:text="НАПИСАТЬ"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    app:cornerRadius="24dp"
+                    app:strokeColor="@color/soft"
+                    android:textColor="@color/white"
+                    app:backgroundTint="@color/primary" />
+            </RelativeLayout>
         </LinearLayout>
 
     </LinearLayout>
