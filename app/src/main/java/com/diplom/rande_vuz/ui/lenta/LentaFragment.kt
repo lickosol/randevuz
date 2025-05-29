@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.diplom.rande_vuz.activities.AfterRegistrationActivity
 import com.diplom.rande_vuz.databinding.FragmentLentaBinding
+import com.diplom.rande_vuz.models.UserData
+import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 
 class LentaFragment : Fragment() {
@@ -20,6 +22,10 @@ class LentaFragment : Fragment() {
 
     private lateinit var viewModel: LentaViewModel
     private lateinit var adapter: LentaAdapter
+    private var fullUserList: List<UserData> = emptyList()
+
+    private var selectedGoals: List<String> = emptyList()
+    private val allGoals = listOf("Дружба", "Репетиторство", "Работа", "Не знаю")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,37 +38,55 @@ class LentaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Лог UID текущего пользователя
         val currentUser = FirebaseAuth.getInstance().currentUser
         Log.d("LentaFragment", "Текущий UID: ${currentUser?.uid}")
 
-        // Инициализация адаптера с обработчиком клика по пользователю
         adapter = LentaAdapter(emptyList()) { user ->
             if (user.uid.isBlank()) {
                 Toast.makeText(context, "Ошибка: ID пользователя пустой", Toast.LENGTH_SHORT).show()
                 return@LentaAdapter
             }
-            (activity as? AfterRegistrationActivity)?.navigateToChatFromOtherTab(
-                chatId = null,
-                otherUserId = user.uid
-            )
+            (activity as? AfterRegistrationActivity)
+                ?.navigateToChatFromOtherTab(chatId = null, otherUserId = user.uid)
         }
-
         binding.rvProfiles.layoutManager = LinearLayoutManager(requireContext())
         binding.rvProfiles.adapter = adapter
 
-        // Инициализация ViewModel
-        viewModel = ViewModelProvider(this)[LentaViewModel::class.java]
+        binding.btnApplyFilters.setOnClickListener {
+            val selected = binding.chipGroupFilterGoals.checkedChipIds
+                .mapNotNull { id -> binding.chipGroupFilterGoals.findViewById<Chip>(id)?.text?.toString() }
 
-        // Подписка на обновление пользователей
+            if (selected.size == allGoals.size) {
+                binding.chipGroupFilterGoals.clearCheck()
+                binding.chipGroupFilterGoals.checkedChipIds.toList().forEach { id ->
+                    binding.chipGroupFilterGoals.findViewById<Chip>(id)?.isChecked = false
+                }
+                selectedGoals = emptyList()
+            } else {
+                selectedGoals = selected
+            }
+
+            applyGoalFilter()
+        }
+
+        viewModel = ViewModelProvider(this)[LentaViewModel::class.java]
         viewModel.users.observe(viewLifecycleOwner) { users ->
             Log.d("LentaFragment", "Получено пользователей: ${users.size}")
-            if (users.isNotEmpty()) {
-                adapter.updateUsers(users)
-            } else {
-                Toast.makeText(requireContext(), "Нет пользователей для отображения", Toast.LENGTH_SHORT).show()
-            }
+            fullUserList = users
+            applyGoalFilter()
         }
+    }
+
+    private fun applyGoalFilter() {
+        val filtered = fullUserList.filter { user ->
+            val goals = when (val g = user.goal) {
+                is String -> listOf(g)
+                is List<*> -> g.filterIsInstance<String>()
+                else -> emptyList()
+            }
+            selectedGoals.isEmpty() || goals.any { it in selectedGoals }
+        }
+        adapter.updateUsers(filtered)
     }
 
     override fun onDestroyView() {
