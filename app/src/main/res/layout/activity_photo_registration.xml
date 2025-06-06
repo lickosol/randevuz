@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.LoginActivity">
-
 
     <!-- Фон -->
     <ImageView
@@ -19,43 +19,79 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-
-    <ImageView
-        android:id="@+id/ivProfilePhoto"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:contentDescription="Фото профиля"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_profile_placeholder"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="118dp"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/btnUploadPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="224dp"
-        android:text="Выбрать фото"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivProfilePhoto" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnNext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Далее"
-        android:textAllCaps="false"
-        style="@style/Widget.MaterialComponents.Button"
-        app:cornerRadius="12dp"
+    <!-- Основной контейнер -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="24dp" />
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintWidth_percent="0.85">
 
+        <!-- Кнопка далее -->
+
+        <ImageView
+            android:id="@+id/ivProfilePhoto"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="96dp"
+            android:contentDescription="Фото профиля"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile_placeholder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="236dp"
+            android:fontFamily="@font/adigiana_ultra"
+            android:gravity="center"
+            android:text="Выбери фото профиля"
+            android:textColor="#243B65"
+            android:textSize="32sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/ivProfilePhoto" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnUploadPhoto"
+            android:layout_width="228dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="92dp"
+            android:text="Выбрать фото"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:backgroundTint="@color/primary"
+            app:cornerRadius="12dp"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconTint="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivProfilePhoto" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNext"
+            style="@style/CustomButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="76dp"
+            android:text="Дальше"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnUploadPhoto" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
